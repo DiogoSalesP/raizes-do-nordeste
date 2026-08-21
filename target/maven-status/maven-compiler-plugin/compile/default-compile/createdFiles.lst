@@ -1,6 +1,0 @@
-com/diogo/raizesdonordeste/domain/Usuario.class
-com/diogo/raizesdonordeste/RaizesdonordesteApplication.class
-com/diogo/raizesdonordeste/repository/UsuarioRepository.class
-com/diogo/raizesdonordeste/config/SecurityConfig.class
-com/diogo/raizesdonordeste/config/DatabaseConfiguration.class
-com/diogo/raizesdonordeste/controller/login.class
