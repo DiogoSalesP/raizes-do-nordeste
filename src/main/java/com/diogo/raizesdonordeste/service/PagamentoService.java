@@ -21,16 +21,14 @@ public class PagamentoService {
 
     private final PagamentoRepository pagamentoRepository;
     private final PedidoRepository pedidoRepository;
-    private final PedidoService pedidoService;
 
     public Pagamento salvar(PagamentoRequestDTO dto) {
         Pagamento pagamento = PagamentoMapper.toEntity(dto);
         Pedido pedido = pedidoRepository.findById(dto.idPedido()).orElse(null);
         if (pagamento.getValorPagamento().compareTo(pedido.getValorTotal()) == 0) {
-            pedido.setStatus(StatusPedido.PAGAMENTO_APROVADO);
             pagamento.setStatusPagamento(StatusPagamento.APROVADO);
+            pedido.setStatus(StatusPedido.ENTREGUE);
         } else {
-            pedido.setStatus(StatusPedido.PAGAMENTO_RECUSADO);
             pagamento.setStatusPagamento(StatusPagamento.RECUSADO);
         }
         pagamento.setPedido(pedido);
@@ -47,16 +45,7 @@ public class PagamentoService {
 
     public Pagamento atualizarStatusPagamento(UUID id, AtualizarStatusPagamentoRequestDTO dto) {
         Pagamento pagamento = buscarPorId(id);
-        UUID idPedido = pagamento.getPedido().getIdPedido();
-        Pedido pedido = pedidoService.buscarPorId(idPedido);
-        StatusPagamento novoStatusPagamento = dto.statusPagamento();
-        pagamento.setStatusPagamento(novoStatusPagamento);
-        switch (novoStatusPagamento) {
-            case APROVADO -> pedido.setStatus(StatusPedido.PAGAMENTO_APROVADO);
-            case RECUSADO -> pedido.setStatus(StatusPedido.PAGAMENTO_RECUSADO);
-            case CANCELADO -> pedido.setStatus(StatusPedido.CANCELADO);
-            case AGUARDANDO -> pedido.setStatus(StatusPedido.AGUARDANDO_PAGAMENTO);
-        }
+        pagamento.setStatusPagamento(dto.statusPagamento());
         return pagamentoRepository.save(pagamento);
     }
 
