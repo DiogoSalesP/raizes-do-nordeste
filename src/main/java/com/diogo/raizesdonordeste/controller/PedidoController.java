@@ -44,6 +44,14 @@ public class PedidoController {
         return PedidoMapper.toResponse(pedido);
     }
 
+    @GetMapping("/pesquisa")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PedidoResponseDTO> pesquisar(@RequestParam(value = "canal-pedido") String canalPedido) {
+        return pedidoService.pesquisa(canalPedido)
+                .stream()
+                .map(PedidoMapper::toResponse)
+                .toList();
+    }
     @PutMapping("/{id}/status")
     @ResponseStatus(HttpStatus.OK)
     public PedidoResponseDTO atualizar(@PathVariable UUID id, @RequestBody AtualizarStatusPedidoRequestDTO dto) {

@@ -10,6 +10,7 @@ import com.diogo.raizesdonordeste.dto.request.PedidoRequestDTO;
 import com.diogo.raizesdonordeste.mapper.PedidoMapper;
 import com.diogo.raizesdonordeste.repository.PedidoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class PedidoService {
         Pedido pedido = PedidoMapper.toEntity(dto);
         Usuario cliente = usuarioService.buscarPorId(dto.idCliente());
         pedido.setCliente(cliente);
-        pedido.setStatus(StatusPedido.AGUARDANDO_PAGAMENTO);
+        pedido.setStatus(StatusPedido.COZINHA);
         for (ItemPedido itemPedido : pedido.getItens()) {
             Produto produto = produtoService.buscarPorId(itemPedido.getProduto().getIdProduto());
             itemPedido.setProduto(produto);
@@ -43,6 +44,11 @@ public class PedidoService {
 
     public Pedido buscarPorId(UUID id) {
         return pedidoRepository.findById(id).orElse(null);
+    }
+
+    public List<Pedido> pesquisa(String canalPedido) {
+        Specification<Pedido> canalEqual = (root, query, cb) -> cb.equal(root.get("canalPedido"), canalPedido);
+        return pedidoRepository.findAll(canalEqual);
     }
 
     public Pedido atualizarStatusPedido(UUID id, AtualizarStatusPedidoRequestDTO dto) {
