@@ -4,6 +4,7 @@ import com.diogo.raizesdonordeste.domain.ItemPedido;
 import com.diogo.raizesdonordeste.domain.Pedido;
 import com.diogo.raizesdonordeste.domain.Produto;
 import com.diogo.raizesdonordeste.domain.Usuario;
+import com.diogo.raizesdonordeste.domain.enums.CanalPedido;
 import com.diogo.raizesdonordeste.domain.enums.StatusPedido;
 import com.diogo.raizesdonordeste.dto.request.AtualizarStatusPedidoRequestDTO;
 import com.diogo.raizesdonordeste.dto.request.PedidoRequestDTO;
@@ -46,7 +47,7 @@ public class PedidoService {
         return pedidoRepository.findById(id).orElse(null);
     }
 
-    public List<Pedido> pesquisa(String canalPedido) {
+    public List<Pedido> pesquisa(CanalPedido canalPedido) {
         Specification<Pedido> canalEqual = (root, query, cb) -> cb.equal(root.get("canalPedido"), canalPedido);
         return pedidoRepository.findAll(canalEqual);
     }

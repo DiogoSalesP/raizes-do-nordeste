@@ -21,7 +21,8 @@ public class ProdutoMapper {
                 produto.getNome(),
                 produto.getDescricao(),
                 produto.getPreco(),
-                produto.getDisponivel()
+                produto.getDisponivel(),
+                produto.getUnidade().getNome()
         );
     }
 }

@@ -30,4 +30,8 @@ public class Produto {
     @Column(name = "disponivel", nullable = false)
     private Boolean disponivel;
 
+    @ManyToOne
+    @JoinColumn(name = "id_unidade", nullable = false)
+    private Unidade unidade;
+
 }

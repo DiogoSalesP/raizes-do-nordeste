@@ -1,6 +1,7 @@
 package com.diogo.raizesdonordeste.service;
 
 import com.diogo.raizesdonordeste.domain.Produto;
+import com.diogo.raizesdonordeste.domain.Unidade;
 import com.diogo.raizesdonordeste.dto.request.ProdutoRequestDTO;
 import com.diogo.raizesdonordeste.mapper.ProdutoMapper;
 import com.diogo.raizesdonordeste.repository.ProdutoRepository;
@@ -15,9 +16,12 @@ import java.util.UUID;
 public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
+    private final UnidadeService unidadeService;
 
     public Produto salvar(ProdutoRequestDTO dto) {
         Produto produto = ProdutoMapper.toEntity(dto);
+        Unidade unidade = unidadeService.buscarPorId(dto.idUnidade());
+        produto.setUnidade(unidade);
         return produtoRepository.save(produto);
     }
 

@@ -8,6 +8,7 @@ public record ProdutoResponseDTO(
         String nome,
         String descricao,
         BigDecimal preco,
-        Boolean disponivel
+        Boolean disponivel,
+        String unidade
 ) {
 }

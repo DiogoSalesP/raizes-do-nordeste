@@ -1,6 +1,7 @@
 package com.diogo.raizesdonordeste.controller;
 
 import com.diogo.raizesdonordeste.domain.Pedido;
+import com.diogo.raizesdonordeste.domain.enums.CanalPedido;
 import com.diogo.raizesdonordeste.domain.enums.StatusPedido;
 import com.diogo.raizesdonordeste.dto.request.AtualizarStatusPedidoRequestDTO;
 import com.diogo.raizesdonordeste.dto.request.PedidoRequestDTO;
@@ -46,7 +47,7 @@ public class PedidoController {
 
     @GetMapping("/pesquisa")
     @ResponseStatus(HttpStatus.OK)
-    public List<PedidoResponseDTO> pesquisar(@RequestParam(value = "canal-pedido") String canalPedido) {
+    public List<PedidoResponseDTO> pesquisar(@RequestParam(value = "canal-pedido") CanalPedido canalPedido) {
         return pedidoService.pesquisa(canalPedido)
                 .stream()
                 .map(PedidoMapper::toResponse)
