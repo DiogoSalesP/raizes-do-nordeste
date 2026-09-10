@@ -43,4 +43,7 @@ public class Usuario {
     @Column(name = "roles")
     private String[] roles;
 
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ProgramaFidelidade programaFidelidade;
+
 }

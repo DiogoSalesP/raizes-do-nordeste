@@ -1,6 +1,8 @@
 package com.diogo.raizesdonordeste.service;
 
+import com.diogo.raizesdonordeste.domain.ProgramaFidelidade;
 import com.diogo.raizesdonordeste.domain.Usuario;
+import com.diogo.raizesdonordeste.domain.enums.NivelFidelidade;
 import com.diogo.raizesdonordeste.dto.request.UsuarioRequestDTO;
 import com.diogo.raizesdonordeste.mapper.UsuarioMapper;
 import com.diogo.raizesdonordeste.repository.UsuarioRepository;
@@ -21,8 +23,13 @@ public class UsuarioService {
 
     public Usuario criar(UsuarioRequestDTO dto) {
         Usuario usuario = UsuarioMapper.toEntity(dto);
+        ProgramaFidelidade programaFidelidade = new ProgramaFidelidade();
+        programaFidelidade.setNivel(NivelFidelidade.BRONZE);
+        programaFidelidade.setSaldoPontos(0);
+        programaFidelidade.setUsuario(usuario);
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         usuario.setRoles(new String[]{"CLIENTE"});
+        usuario.setProgramaFidelidade(programaFidelidade);
         return usuarioRepository.save(usuario);
     }
 

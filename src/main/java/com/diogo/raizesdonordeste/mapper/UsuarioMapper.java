@@ -21,7 +21,8 @@ public class UsuarioMapper {
                 usuario.getNome(),
                 usuario.getEmail(),
                 usuario.getTelefone(),
-                usuario.getCadastro()
+                usuario.getCadastro(),
+                usuario.getProgramaFidelidade().getNivel()
         );
     }
 }
