@@ -1,0 +1,52 @@
+package com.diogo.raizesdonordeste.controller;
+
+
+import com.diogo.raizesdonordeste.domain.ProgramaFidelidade;
+import com.diogo.raizesdonordeste.dto.request.ProgramaFidelidadeRequestDTO;
+import com.diogo.raizesdonordeste.dto.response.ProgramaFidelidadeResponseDTO;
+import com.diogo.raizesdonordeste.mapper.ProgramaFidelidadeMapper;
+import com.diogo.raizesdonordeste.service.ProgramaFidelidadeService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("programa-fidelidade")
+@RequiredArgsConstructor
+public class ProgramaFidelidadeController {
+
+    private final ProgramaFidelidadeService fidelidadeService;
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProgramaFidelidadeResponseDTO> buscarTodos() {
+        return fidelidadeService.buscarTodos()
+                .stream()
+                .map(ProgramaFidelidadeMapper::toResponse)
+                .toList();
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ProgramaFidelidadeResponseDTO buscarPorId(@PathVariable UUID id) {
+        ProgramaFidelidade programaFidelidades = fidelidadeService.buscarPorId(id);
+        return ProgramaFidelidadeMapper.toResponse(programaFidelidades);
+    }
+
+    @GetMapping("/pesquisa")
+    @ResponseStatus(HttpStatus.OK)
+    public ProgramaFidelidadeResponseDTO buscarPorEmail(@RequestParam(value = "email") String email) {
+        ProgramaFidelidade programaFidelidade = fidelidadeService.buscarPorEmail(email);
+        return ProgramaFidelidadeMapper.toResponse(programaFidelidade);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ProgramaFidelidadeResponseDTO atualizar(@PathVariable UUID id, @RequestBody ProgramaFidelidadeRequestDTO dto) {
+        ProgramaFidelidade fidelidade = fidelidadeService.atualizar(id, dto);
+        return ProgramaFidelidadeMapper.toResponse(fidelidade);
+    }
+}
