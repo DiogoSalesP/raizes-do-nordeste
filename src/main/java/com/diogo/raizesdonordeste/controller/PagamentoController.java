@@ -6,6 +6,7 @@ import com.diogo.raizesdonordeste.dto.request.PagamentoRequestDTO;
 import com.diogo.raizesdonordeste.dto.response.PagamentoResponseDTO;
 import com.diogo.raizesdonordeste.mapper.PagamentoMapper;
 import com.diogo.raizesdonordeste.service.PagamentoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class PagamentoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PagamentoResponseDTO salvar(@RequestBody PagamentoRequestDTO dto) {
+    public PagamentoResponseDTO salvar(@RequestBody @Valid PagamentoRequestDTO dto) {
         Pagamento pagamento = pagamentoService.salvar(dto);
         return PagamentoMapper.toResponse(pagamento);
     }
@@ -45,7 +46,7 @@ public class PagamentoController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public PagamentoResponseDTO atualizarStatus(@PathVariable UUID id, @RequestBody AtualizarStatusPagamentoRequestDTO dto) {
+    public PagamentoResponseDTO atualizarStatus(@PathVariable UUID id, @RequestBody @Valid AtualizarStatusPagamentoRequestDTO dto) {
         Pagamento pagamento = pagamentoService.atualizarStatusPagamento(id, dto);
         return PagamentoMapper.toResponse(pagamento);
     }

@@ -8,6 +8,7 @@ import com.diogo.raizesdonordeste.dto.request.PedidoRequestDTO;
 import com.diogo.raizesdonordeste.dto.response.PedidoResponseDTO;
 import com.diogo.raizesdonordeste.mapper.PedidoMapper;
 import com.diogo.raizesdonordeste.service.PedidoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class PedidoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PedidoResponseDTO salvar(@RequestBody PedidoRequestDTO dto) {
+    public PedidoResponseDTO salvar(@RequestBody @Valid PedidoRequestDTO dto) {
         Pedido pedido = pedidoService.salvar(dto);
         return PedidoMapper.toResponse(pedido);
     }
@@ -55,7 +56,7 @@ public class PedidoController {
     }
     @PutMapping("/{id}/status")
     @ResponseStatus(HttpStatus.OK)
-    public PedidoResponseDTO atualizar(@PathVariable UUID id, @RequestBody AtualizarStatusPedidoRequestDTO dto) {
+    public PedidoResponseDTO atualizar(@PathVariable UUID id, @RequestBody @Valid AtualizarStatusPedidoRequestDTO dto) {
         Pedido pedido = pedidoService.atualizarStatusPedido(id, dto);
         return PedidoMapper.toResponse(pedido);
     }

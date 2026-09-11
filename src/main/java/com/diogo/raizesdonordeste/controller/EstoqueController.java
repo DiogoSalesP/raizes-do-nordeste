@@ -5,6 +5,7 @@ import com.diogo.raizesdonordeste.dto.request.EstoqueRequestDTO;
 import com.diogo.raizesdonordeste.dto.response.EstoqueResponseDTO;
 import com.diogo.raizesdonordeste.mapper.EstoqueMapper;
 import com.diogo.raizesdonordeste.service.EstoqueService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class EstoqueController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EstoqueResponseDTO salvar(@RequestBody EstoqueRequestDTO dto) {
+    public EstoqueResponseDTO salvar(@RequestBody @Valid EstoqueRequestDTO dto) {
         Estoque estoque = estoqueService.salvar(dto);
         return EstoqueMapper.toResponse(estoque);
     }
@@ -44,7 +45,7 @@ public class EstoqueController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public EstoqueResponseDTO atualizarQuantidade(@RequestBody EstoqueRequestDTO dto, @PathVariable UUID id) {
+    public EstoqueResponseDTO atualizarQuantidade(@RequestBody @Valid EstoqueRequestDTO dto, @PathVariable UUID id) {
         Estoque estoque = estoqueService.atualizarQuantidade(dto, id);
         return EstoqueMapper.toResponse(estoque);
     }

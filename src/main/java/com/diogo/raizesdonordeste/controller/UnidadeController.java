@@ -6,6 +6,7 @@ import com.diogo.raizesdonordeste.dto.request.UnidadeRequestDTO;
 import com.diogo.raizesdonordeste.dto.response.UnidadeResponseDTO;
 import com.diogo.raizesdonordeste.mapper.UnidadeMapper;
 import com.diogo.raizesdonordeste.service.UnidadeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class UnidadeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UnidadeResponseDTO salvar(@RequestBody UnidadeRequestDTO dto) {
+    public UnidadeResponseDTO salvar(@RequestBody @Valid UnidadeRequestDTO dto) {
         Unidade unidade = unidadeService.salvar(dto);
         return UnidadeMapper.toResponse(unidade);
     }
@@ -46,7 +47,7 @@ public class UnidadeController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UnidadeResponseDTO atualizar(@PathVariable UUID id, @RequestBody UnidadeRequestDTO dto) {
+    public UnidadeResponseDTO atualizar(@PathVariable UUID id, @RequestBody @Valid UnidadeRequestDTO dto) {
         Unidade unidade = unidadeService.atualizar(id, dto);
         return UnidadeMapper.toResponse(unidade);
     }

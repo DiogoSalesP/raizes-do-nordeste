@@ -5,6 +5,7 @@ import com.diogo.raizesdonordeste.dto.request.ProdutoRequestDTO;
 import com.diogo.raizesdonordeste.dto.response.ProdutoResponseDTO;
 import com.diogo.raizesdonordeste.mapper.ProdutoMapper;
 import com.diogo.raizesdonordeste.service.ProdutoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class ProdutoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProdutoResponseDTO salvarProduto(@RequestBody ProdutoRequestDTO dto) {
+    public ProdutoResponseDTO salvarProduto(@RequestBody @Valid ProdutoRequestDTO dto) {
         Produto produto = produtoService.salvar(dto);
         return ProdutoMapper.toResponse(produto);
     }
@@ -54,7 +55,7 @@ public class ProdutoController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ProdutoResponseDTO atualizar(@PathVariable UUID id, @RequestBody ProdutoRequestDTO dto) {
+    public ProdutoResponseDTO atualizar(@PathVariable UUID id, @RequestBody @Valid ProdutoRequestDTO dto) {
         Produto produto = produtoService.atualizar(id, dto);
         return ProdutoMapper.toResponse(produto);
     }

@@ -6,6 +6,7 @@ import com.diogo.raizesdonordeste.dto.request.ProgramaFidelidadeRequestDTO;
 import com.diogo.raizesdonordeste.dto.response.ProgramaFidelidadeResponseDTO;
 import com.diogo.raizesdonordeste.mapper.ProgramaFidelidadeMapper;
 import com.diogo.raizesdonordeste.service.ProgramaFidelidadeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +46,7 @@ public class ProgramaFidelidadeController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ProgramaFidelidadeResponseDTO atualizar(@PathVariable UUID id, @RequestBody ProgramaFidelidadeRequestDTO dto) {
+    public ProgramaFidelidadeResponseDTO atualizar(@PathVariable UUID id, @RequestBody @Valid ProgramaFidelidadeRequestDTO dto) {
         ProgramaFidelidade fidelidade = fidelidadeService.atualizar(id, dto);
         return ProgramaFidelidadeMapper.toResponse(fidelidade);
     }

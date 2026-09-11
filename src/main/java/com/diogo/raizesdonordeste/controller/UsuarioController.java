@@ -5,6 +5,7 @@ import com.diogo.raizesdonordeste.dto.request.UsuarioRequestDTO;
 import com.diogo.raizesdonordeste.dto.response.UsuarioResponseDTO;
 import com.diogo.raizesdonordeste.mapper.UsuarioMapper;
 import com.diogo.raizesdonordeste.service.UsuarioService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class UsuarioController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UsuarioResponseDTO criarUsuario(@RequestBody UsuarioRequestDTO dto) {
+    public UsuarioResponseDTO criarUsuario(@RequestBody @Valid UsuarioRequestDTO dto) {
         Usuario usuario = usuarioService.criar(dto);
         return UsuarioMapper.toResponse(usuario);
     }
@@ -43,7 +44,7 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UsuarioResponseDTO atualizarUsuarioPorId(@PathVariable UUID id, @RequestBody UsuarioRequestDTO dto) {
+    public UsuarioResponseDTO atualizarUsuarioPorId(@PathVariable UUID id, @RequestBody @Valid UsuarioRequestDTO dto) {
         Usuario usuario = usuarioService.atualizar(id, dto);
         return UsuarioMapper.toResponse(usuario);
     }
