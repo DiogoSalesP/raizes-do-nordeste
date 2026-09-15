@@ -8,6 +8,7 @@ import com.diogo.raizesdonordeste.domain.enums.CanalPedido;
 import com.diogo.raizesdonordeste.domain.enums.StatusPedido;
 import com.diogo.raizesdonordeste.dto.request.AtualizarStatusPedidoRequestDTO;
 import com.diogo.raizesdonordeste.dto.request.PedidoRequestDTO;
+import com.diogo.raizesdonordeste.exception.RegistroNaoEncontradoException;
 import com.diogo.raizesdonordeste.mapper.PedidoMapper;
 import com.diogo.raizesdonordeste.repository.PedidoRepository;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +45,7 @@ public class PedidoService {
     }
 
     public Pedido buscarPorId(UUID id) {
-        return pedidoRepository.findById(id).orElse(null);
+        return pedidoRepository.findById(id).orElseThrow(() -> new RegistroNaoEncontradoException("Pedido", id));
     }
 
     public List<Pedido> pesquisa(CanalPedido canalPedido) {

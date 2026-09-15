@@ -3,9 +3,13 @@ package com.diogo.raizesdonordeste.service;
 import com.diogo.raizesdonordeste.domain.ProgramaFidelidade;
 import com.diogo.raizesdonordeste.domain.Usuario;
 import com.diogo.raizesdonordeste.domain.enums.NivelFidelidade;
+import com.diogo.raizesdonordeste.dto.request.AtualizarUsuarioRequestDTO;
 import com.diogo.raizesdonordeste.dto.request.UsuarioRequestDTO;
+import com.diogo.raizesdonordeste.exception.RegistroDuplicadoException;
+import com.diogo.raizesdonordeste.exception.RegistroNaoEncontradoException;
 import com.diogo.raizesdonordeste.mapper.UsuarioMapper;
 import com.diogo.raizesdonordeste.repository.UsuarioRepository;
+import com.diogo.raizesdonordeste.validator.UsuarioValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,10 +23,12 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UsuarioValidator usuarioValidator;
 
 
     public Usuario criar(UsuarioRequestDTO dto) {
         Usuario usuario = UsuarioMapper.toEntity(dto);
+        usuarioValidator.validarCriar(usuario);
         ProgramaFidelidade programaFidelidade = new ProgramaFidelidade();
         programaFidelidade.setNivel(NivelFidelidade.BRONZE);
         programaFidelidade.setSaldoPontos(0);
@@ -38,15 +44,16 @@ public class UsuarioService {
     }
 
     public Usuario buscarPorId(UUID id) {
-        return usuarioRepository.findById(id).orElse(null);
+        return usuarioRepository.findById(id).orElseThrow(() -> new RegistroNaoEncontradoException("Usuário", id));
     }
 
     public Usuario obterPorLogin(String login) {
         return usuarioRepository.findByEmail(login);
     }
 
-    public Usuario atualizar(UUID id, UsuarioRequestDTO dto) {
+    public Usuario atualizar(UUID id, AtualizarUsuarioRequestDTO dto) {
         Usuario usuario = buscarPorId(id);
+        usuarioValidator.validarAtualizar(id, dto.email());
         usuario.setNome(dto.nome());
         usuario.setEmail(dto.email());
         usuario.setTelefone(dto.telefone());

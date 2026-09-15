@@ -20,11 +20,11 @@ import java.util.UUID;
 public class PagamentoService {
 
     private final PagamentoRepository pagamentoRepository;
-    private final PedidoRepository pedidoRepository;
+    private final PedidoService pedidoService;
 
     public Pagamento salvar(PagamentoRequestDTO dto) {
         Pagamento pagamento = PagamentoMapper.toEntity(dto);
-        Pedido pedido = pedidoRepository.findById(dto.idPedido()).orElse(null);
+        Pedido pedido = pedidoService.buscarPorId(dto.idPedido());
         if (pagamento.getValorPagamento().compareTo(pedido.getValorTotal()) == 0) {
             pagamento.setStatusPagamento(StatusPagamento.APROVADO);
             pedido.setStatus(StatusPedido.ENTREGUE);

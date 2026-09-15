@@ -2,13 +2,17 @@ package com.diogo.raizesdonordeste.service;
 
 import com.diogo.raizesdonordeste.domain.Estoque;
 import com.diogo.raizesdonordeste.domain.Produto;
+import com.diogo.raizesdonordeste.dto.request.AtualizarEstoqueDTO;
 import com.diogo.raizesdonordeste.dto.request.EstoqueRequestDTO;
+import com.diogo.raizesdonordeste.exception.OperacaoNaoPermitidaException;
+import com.diogo.raizesdonordeste.exception.RegistroNaoEncontradoException;
 import com.diogo.raizesdonordeste.mapper.EstoqueMapper;
 import com.diogo.raizesdonordeste.repository.EstoqueRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -30,11 +34,14 @@ public class EstoqueService {
     }
 
     public Estoque buscarPorId(UUID id) {
-        return estoqueRepository.findById(id).orElse(null);
+        return estoqueRepository.findById(id).orElseThrow(() -> new RegistroNaoEncontradoException("Estoque", id));
     }
+     public Estoque buscarEstoquePorIdProduto(UUID idProduto) {
+        return estoqueRepository.findByProduto_idProduto(idProduto);
+     }
 
-    public Estoque atualizarQuantidade(EstoqueRequestDTO dto, UUID id) {
-        Estoque estoque = estoqueRepository.findById(id).orElse(null);
+    public Estoque atualizarQuantidade(AtualizarEstoqueDTO dto, UUID id) {
+        Estoque estoque = buscarPorId(id);
         estoque.setQuantidade(dto.quantidade());
         estoque.setEstoqueMinimo(dto.estoqueMinimo());
         return estoqueRepository.save(estoque);

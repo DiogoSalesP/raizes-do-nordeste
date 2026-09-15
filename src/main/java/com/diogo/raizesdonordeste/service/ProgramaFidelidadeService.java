@@ -2,6 +2,7 @@ package com.diogo.raizesdonordeste.service;
 
 import com.diogo.raizesdonordeste.domain.ProgramaFidelidade;
 import com.diogo.raizesdonordeste.dto.request.ProgramaFidelidadeRequestDTO;
+import com.diogo.raizesdonordeste.exception.RegistroNaoEncontradoException;
 import com.diogo.raizesdonordeste.repository.ProgramaFidelidadeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class ProgramaFidelidadeService {
     }
 
     public ProgramaFidelidade buscarPorId(UUID id) {
-        return fidelidadeRepository.findById(id).orElse(null);
+        return fidelidadeRepository.findById(id).orElseThrow(() -> new RegistroNaoEncontradoException("Programa de fidelidade", id));
     }
 
     public ProgramaFidelidade buscarPorEmail(String email) {

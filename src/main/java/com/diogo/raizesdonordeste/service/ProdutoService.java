@@ -3,6 +3,7 @@ package com.diogo.raizesdonordeste.service;
 import com.diogo.raizesdonordeste.domain.Produto;
 import com.diogo.raizesdonordeste.domain.Unidade;
 import com.diogo.raizesdonordeste.dto.request.ProdutoRequestDTO;
+import com.diogo.raizesdonordeste.exception.RegistroNaoEncontradoException;
 import com.diogo.raizesdonordeste.mapper.ProdutoMapper;
 import com.diogo.raizesdonordeste.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class ProdutoService {
     }
 
     public Produto buscarPorId(UUID id) {
-        return produtoRepository.findById(id).orElse(null);
+        return produtoRepository.findById(id).orElseThrow(() -> new RegistroNaoEncontradoException("Produto", id));
     }
 
     public List<Produto> buscarDisponivel() {

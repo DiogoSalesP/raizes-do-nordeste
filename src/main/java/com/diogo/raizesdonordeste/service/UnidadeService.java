@@ -2,6 +2,7 @@ package com.diogo.raizesdonordeste.service;
 
 import com.diogo.raizesdonordeste.domain.Unidade;
 import com.diogo.raizesdonordeste.dto.request.UnidadeRequestDTO;
+import com.diogo.raizesdonordeste.exception.RegistroNaoEncontradoException;
 import com.diogo.raizesdonordeste.mapper.UnidadeMapper;
 import com.diogo.raizesdonordeste.repository.UnidadeRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class UnidadeService {
     }
 
     public Unidade buscarPorId(UUID id) {
-        return unidadeRepository.findById(id).orElse(null);
+        return unidadeRepository.findById(id).orElseThrow(() -> new RegistroNaoEncontradoException("Unidade", id));
     }
 
     public Unidade atualizar(UUID id, UnidadeRequestDTO dto) {
