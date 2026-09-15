@@ -1,9 +1,11 @@
 package com.diogo.raizesdonordeste.dto.request;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
-public record UsuarioRequestDTO(
-
+public record AtualizarUsuarioRequestDTO(
         @NotBlank(message = "campo nome obrigatório")
         @Size(min = 3, max = 100, message = "nome deve ter no mínimo 3 caracteres")
         @Pattern(regexp = "^[A-Za-zÀ-ÖØ-öø-ÿ ]+$", message = "Nome deve conter apenas letras.")
@@ -14,11 +16,6 @@ public record UsuarioRequestDTO(
         @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
                 message = "e-mail deve ser um endereço válido")
         String email,
-
-        @NotBlank(message = "campo senha obrigatório")
-        @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&#]).{8,20}$",
-                message = "A senha deve conter letra maiúscula, minúscula, número e caractere especial.")
-        String senha,
 
         @NotBlank(message = "campo telefone obrigatório")
         @Pattern(regexp = "^\\d{10,11}$", message = "telefone deve ter 10 ou 11 dígitos")

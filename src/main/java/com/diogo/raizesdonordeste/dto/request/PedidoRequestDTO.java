@@ -16,7 +16,6 @@ public record PedidoRequestDTO(
         UUID idCliente,
 
         @NotEmpty(message = "O pedido deve possuir pelo menos um item")
-        @Valid
-        List<ItemPedidoRequestDTO> itens
+        List<@Valid ItemPedidoRequestDTO> itens
 ) {
 }
