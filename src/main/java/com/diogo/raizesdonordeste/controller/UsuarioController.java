@@ -1,6 +1,7 @@
 package com.diogo.raizesdonordeste.controller;
 
 import com.diogo.raizesdonordeste.domain.Usuario;
+import com.diogo.raizesdonordeste.dto.request.AtualizarUsuarioRequestDTO;
 import com.diogo.raizesdonordeste.dto.request.UsuarioRequestDTO;
 import com.diogo.raizesdonordeste.dto.response.UsuarioResponseDTO;
 import com.diogo.raizesdonordeste.mapper.UsuarioMapper;
@@ -44,7 +45,7 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UsuarioResponseDTO atualizarUsuarioPorId(@PathVariable UUID id, @RequestBody @Valid UsuarioRequestDTO dto) {
+    public UsuarioResponseDTO atualizarUsuarioPorId(@PathVariable UUID id, @RequestBody @Valid AtualizarUsuarioRequestDTO dto) {
         Usuario usuario = usuarioService.atualizar(id, dto);
         return UsuarioMapper.toResponse(usuario);
     }
