@@ -1,6 +1,7 @@
 package com.diogo.raizesdonordeste.controller;
 
 import com.diogo.raizesdonordeste.domain.Estoque;
+import com.diogo.raizesdonordeste.dto.request.AtualizarEstoqueRequestDTO;
 import com.diogo.raizesdonordeste.dto.request.EstoqueRequestDTO;
 import com.diogo.raizesdonordeste.dto.response.EstoqueResponseDTO;
 import com.diogo.raizesdonordeste.mapper.EstoqueMapper;
@@ -43,9 +44,16 @@ public class EstoqueController {
         return EstoqueMapper.toResponse(estoque);
     }
 
+    @GetMapping("/produto/{idProduto}")
+    @ResponseStatus(HttpStatus.OK)
+    public EstoqueResponseDTO buscarEstoquePorIdProduto(@PathVariable UUID idProduto) {
+        Estoque estoque = estoqueService.buscarEstoquePorIdProduto(idProduto);
+        return EstoqueMapper.toResponse(estoque);
+    }
+
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public EstoqueResponseDTO atualizarQuantidade(@RequestBody @Valid EstoqueRequestDTO dto, @PathVariable UUID id) {
+    public EstoqueResponseDTO atualizarQuantidade(@RequestBody @Valid AtualizarEstoqueRequestDTO dto, @PathVariable UUID id) {
         Estoque estoque = estoqueService.atualizarQuantidade(dto, id);
         return EstoqueMapper.toResponse(estoque);
     }
