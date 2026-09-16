@@ -44,10 +44,4 @@ public class ProgramaFidelidadeController {
         return ProgramaFidelidadeMapper.toResponse(programaFidelidade);
     }
 
-    @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ProgramaFidelidadeResponseDTO atualizar(@PathVariable UUID id, @RequestBody @Valid ProgramaFidelidadeRequestDTO dto) {
-        ProgramaFidelidade fidelidade = fidelidadeService.atualizar(id, dto);
-        return ProgramaFidelidadeMapper.toResponse(fidelidade);
-    }
 }

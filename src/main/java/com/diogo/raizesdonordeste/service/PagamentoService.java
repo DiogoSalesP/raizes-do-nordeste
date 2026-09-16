@@ -22,11 +22,13 @@ public class PagamentoService {
 
     private final PagamentoRepository pagamentoRepository;
     private final PedidoService pedidoService;
+    private final ProgramaFidelidadeService programaFidelidadeService;
 
     public Pagamento salvar(PagamentoRequestDTO dto) {
         Pagamento pagamento = PagamentoMapper.toEntity(dto);
         Pedido pedido = pedidoService.buscarPorId(dto.idPedido());
         if (pagamento.getValorPagamento().compareTo(pedido.getValorTotal()) == 0) {
+            programaFidelidadeService.atualizar(pedido.getCliente().getEmail(), pedido.getValorTotal());
             pagamento.setStatusPagamento(StatusPagamento.APROVADO);
             pedido.setStatus(StatusPedido.ENTREGUE);
         } else {
