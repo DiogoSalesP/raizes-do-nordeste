@@ -6,9 +6,10 @@ import com.diogo.raizesdonordeste.domain.enums.StatusPagamento;
 import com.diogo.raizesdonordeste.domain.enums.StatusPedido;
 import com.diogo.raizesdonordeste.dto.request.AtualizarStatusPagamentoRequestDTO;
 import com.diogo.raizesdonordeste.dto.request.PagamentoRequestDTO;
+import com.diogo.raizesdonordeste.exception.OperacaoNaoPermitidaException;
+import com.diogo.raizesdonordeste.exception.RegistroNaoEncontradoException;
 import com.diogo.raizesdonordeste.mapper.PagamentoMapper;
 import com.diogo.raizesdonordeste.repository.PagamentoRepository;
-import com.diogo.raizesdonordeste.repository.PedidoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,7 @@ public class PagamentoService {
             pedido.setStatus(StatusPedido.ENTREGUE);
         } else {
             pagamento.setStatusPagamento(StatusPagamento.RECUSADO);
+            throw new OperacaoNaoPermitidaException("Pagamento Recusado. Valor do pedido: R$" + pedido.getValorTotal());
         }
         pagamento.setPedido(pedido);
         return pagamentoRepository.save(pagamento);
@@ -40,7 +42,7 @@ public class PagamentoService {
     }
 
     public Pagamento buscarPorId(UUID id) {
-        return pagamentoRepository.findById(id).orElse(null);
+        return pagamentoRepository.findById(id).orElseThrow(() -> new RegistroNaoEncontradoException("Pagamento", id));
     }
 
     public Pagamento atualizarStatusPagamento(UUID id, AtualizarStatusPagamentoRequestDTO dto) {
