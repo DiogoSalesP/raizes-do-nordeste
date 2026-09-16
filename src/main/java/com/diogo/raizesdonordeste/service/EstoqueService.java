@@ -52,5 +52,8 @@ public class EstoqueService {
             throw new OperacaoNaoPermitidaException("Estoque indisponível para o produto: " + estoque.getProduto().getNome());
         }
         estoque.setQuantidade(estoque.getQuantidade() - quantidade);
+        if (estoque.getQuantidade() == 0) {
+            estoque.getProduto().setDisponivel(false);
+        }
     }
 }
