@@ -4,6 +4,7 @@ import com.diogo.raizesdonordeste.domain.Estoque;
 import com.diogo.raizesdonordeste.domain.Produto;
 import com.diogo.raizesdonordeste.dto.request.AtualizarEstoqueRequestDTO;
 import com.diogo.raizesdonordeste.dto.request.EstoqueRequestDTO;
+import com.diogo.raizesdonordeste.exception.OperacaoNaoPermitidaException;
 import com.diogo.raizesdonordeste.exception.RegistroNaoEncontradoException;
 import com.diogo.raizesdonordeste.mapper.EstoqueMapper;
 import com.diogo.raizesdonordeste.repository.EstoqueRepository;
@@ -43,5 +44,13 @@ public class EstoqueService {
         estoque.setQuantidade(dto.quantidade());
         estoque.setEstoqueMinimo(dto.estoqueMinimo());
         return estoqueRepository.save(estoque);
+    }
+
+    public void atualizarEstoque(Produto produto, Integer quantidade) {
+        Estoque estoque = buscarEstoquePorIdProduto(produto.getIdProduto());
+        if (estoque.getQuantidade() < quantidade) {
+            throw new OperacaoNaoPermitidaException("Estoque indisponível para o produto: " + estoque.getProduto().getNome());
+        }
+        estoque.setQuantidade(estoque.getQuantidade() - quantidade);
     }
 }

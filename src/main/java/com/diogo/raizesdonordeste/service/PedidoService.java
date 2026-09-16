@@ -25,6 +25,7 @@ public class PedidoService {
     private final PedidoRepository pedidoRepository;
     private final UsuarioService usuarioService;
     private final ProdutoService produtoService;
+    private final EstoqueService estoqueService;
 
     public Pedido salvar(PedidoRequestDTO dto) {
         Pedido pedido = PedidoMapper.toEntity(dto);
@@ -33,6 +34,7 @@ public class PedidoService {
         pedido.setStatus(StatusPedido.COZINHA);
         for (ItemPedido itemPedido : pedido.getItens()) {
             Produto produto = produtoService.buscarPorId(itemPedido.getProduto().getIdProduto());
+            estoqueService.atualizarEstoque(produto, itemPedido.getQuantidade());
             itemPedido.setProduto(produto);
             itemPedido.setPrecoUnitario(produto.getPreco());
         }
