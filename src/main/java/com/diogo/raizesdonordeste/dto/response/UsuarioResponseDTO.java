@@ -11,6 +11,7 @@ public record UsuarioResponseDTO(
         String email,
         String telefone,
         LocalDateTime cadastro,
-        NivelFidelidade nivelFidelidade
+        NivelFidelidade nivelFidelidade,
+        String[] roles
 ) {
 }

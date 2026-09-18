@@ -8,6 +8,7 @@ import com.diogo.raizesdonordeste.service.ProdutoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class ProdutoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('GERENTE')")
     public ProdutoResponseDTO salvarProduto(@RequestBody @Valid ProdutoRequestDTO dto) {
         Produto produto = produtoService.salvar(dto);
         return ProdutoMapper.toResponse(produto);
@@ -29,6 +31,7 @@ public class ProdutoController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('GERENTE', 'CLIENTE')")
     public List<ProdutoResponseDTO> buscarTodosProdutos() {
         List<Produto> produtos = produtoService.buscarTodos();
         return produtos
@@ -39,6 +42,7 @@ public class ProdutoController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('GERENTE', 'CLIENTE')")
     public ProdutoResponseDTO buscarProdutoPorId(@PathVariable UUID id) {
         Produto produtos = produtoService.buscarPorId(id);
         return ProdutoMapper.toResponse(produtos);
@@ -46,6 +50,7 @@ public class ProdutoController {
 
     @GetMapping("/disponiveis")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('GERENTE', 'CLIENTE')")
     public List<ProdutoResponseDTO> buscarPorDisponivel() {
         return produtoService.buscarDisponivel()
                 .stream()
@@ -55,6 +60,7 @@ public class ProdutoController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('GERENTE')")
     public ProdutoResponseDTO atualizar(@PathVariable UUID id, @RequestBody @Valid ProdutoRequestDTO dto) {
         Produto produto = produtoService.atualizar(id, dto);
         return ProdutoMapper.toResponse(produto);
@@ -62,6 +68,7 @@ public class ProdutoController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('GERENTE')")
     public void delete(@PathVariable UUID id) {
         produtoService.deletar(id);
     }

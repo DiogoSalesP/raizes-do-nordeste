@@ -17,4 +17,8 @@ public record ErroResponse(int status, String mensagem, List<ErroCampo> erros) {
     public static ErroResponse conflito(String mensagem) {
         return new ErroResponse(HttpStatus.CONFLICT.value(), mensagem, List.of());
     }
+
+    public static ErroResponse acessoNegado(String mensagem) {
+        return new ErroResponse(HttpStatus.FORBIDDEN.value(), mensagem, List.of());
+    }
 }

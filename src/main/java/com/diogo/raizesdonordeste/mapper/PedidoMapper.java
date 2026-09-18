@@ -20,6 +20,7 @@ public class PedidoMapper {
                 pedido.getStatus(),
                 pedido.getValorTotal(),
                 pedido.getCliente().getNome(),
+                pedido.getCliente().getEmail(),
                 pedido.getItens().stream().map(ItemPedidoMapper::toResponse).toList()
         );
     }

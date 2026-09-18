@@ -22,7 +22,8 @@ public class UsuarioMapper {
                 usuario.getEmail(),
                 usuario.getTelefone(),
                 usuario.getCadastro(),
-                usuario.getProgramaFidelidade().getNivel()
+                usuario.getProgramaFidelidade().getNivel(),
+                usuario.getRoles()
         );
     }
 }

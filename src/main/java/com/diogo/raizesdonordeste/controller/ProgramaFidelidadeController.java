@@ -9,6 +9,7 @@ import com.diogo.raizesdonordeste.service.ProgramaFidelidadeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class ProgramaFidelidadeController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('GERENTE')")
     public List<ProgramaFidelidadeResponseDTO> buscarTodos() {
         return fidelidadeService.buscarTodos()
                 .stream()
@@ -32,6 +34,7 @@ public class ProgramaFidelidadeController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('GERENTE')")
     public ProgramaFidelidadeResponseDTO buscarPorId(@PathVariable UUID id) {
         ProgramaFidelidade programaFidelidades = fidelidadeService.buscarPorId(id);
         return ProgramaFidelidadeMapper.toResponse(programaFidelidades);
@@ -39,6 +42,7 @@ public class ProgramaFidelidadeController {
 
     @GetMapping("/pesquisa")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('GERENTE', 'CLIENTE')")
     public ProgramaFidelidadeResponseDTO buscarPorEmail(@RequestParam(value = "email") String email) {
         ProgramaFidelidade programaFidelidade = fidelidadeService.buscarPorEmail(email);
         return ProgramaFidelidadeMapper.toResponse(programaFidelidade);

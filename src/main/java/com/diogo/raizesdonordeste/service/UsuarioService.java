@@ -5,7 +5,7 @@ import com.diogo.raizesdonordeste.domain.Usuario;
 import com.diogo.raizesdonordeste.domain.enums.NivelFidelidade;
 import com.diogo.raizesdonordeste.dto.request.AtualizarUsuarioRequestDTO;
 import com.diogo.raizesdonordeste.dto.request.UsuarioRequestDTO;
-import com.diogo.raizesdonordeste.exception.RegistroDuplicadoException;
+import com.diogo.raizesdonordeste.dto.request.UsuarioRolesRequestDTO;
 import com.diogo.raizesdonordeste.exception.RegistroNaoEncontradoException;
 import com.diogo.raizesdonordeste.mapper.UsuarioMapper;
 import com.diogo.raizesdonordeste.repository.UsuarioRepository;
@@ -57,6 +57,12 @@ public class UsuarioService {
         usuario.setNome(dto.nome());
         usuario.setEmail(dto.email());
         usuario.setTelefone(dto.telefone());
+        return usuarioRepository.save(usuario);
+    }
+
+    public Usuario atualizarRoles(UUID id, UsuarioRolesRequestDTO roles) {
+        Usuario usuario = buscarPorId(id);
+        usuario.setRoles(roles.roles());
         return usuarioRepository.save(usuario);
     }
 

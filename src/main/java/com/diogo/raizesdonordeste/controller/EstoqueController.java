@@ -9,6 +9,7 @@ import com.diogo.raizesdonordeste.service.EstoqueService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class EstoqueController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('GERENTE')")
     public EstoqueResponseDTO salvar(@RequestBody @Valid EstoqueRequestDTO dto) {
         Estoque estoque = estoqueService.salvar(dto);
         return EstoqueMapper.toResponse(estoque);
@@ -30,6 +32,7 @@ public class EstoqueController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('GERENTE')")
     public List<EstoqueResponseDTO> buscarTodos() {
         return estoqueService.buscarTodos()
                 .stream()
@@ -39,6 +42,7 @@ public class EstoqueController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('GERENTE')")
     public EstoqueResponseDTO buscarPorId(@PathVariable UUID id) {
         Estoque estoque = estoqueService.buscarPorId(id);
         return EstoqueMapper.toResponse(estoque);
@@ -46,6 +50,7 @@ public class EstoqueController {
 
     @GetMapping("/produto/{idProduto}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('GERENTE')")
     public EstoqueResponseDTO buscarEstoquePorIdProduto(@PathVariable UUID idProduto) {
         Estoque estoque = estoqueService.buscarEstoquePorIdProduto(idProduto);
         return EstoqueMapper.toResponse(estoque);
@@ -53,6 +58,7 @@ public class EstoqueController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('GERENTE')")
     public EstoqueResponseDTO atualizarQuantidade(@RequestBody @Valid AtualizarEstoqueRequestDTO dto, @PathVariable UUID id) {
         Estoque estoque = estoqueService.atualizarQuantidade(dto, id);
         return EstoqueMapper.toResponse(estoque);

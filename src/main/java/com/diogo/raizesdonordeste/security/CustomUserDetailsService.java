@@ -7,19 +7,18 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Service;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @RequiredArgsConstructor
-@Service
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UsuarioService usuarioService;
 
     @Override
-    public UserDetails loadUserByUsername(@NonNull String email) throws RuntimeException{
+    public UserDetails loadUserByUsername(@NonNull String email) throws RuntimeException {
         Usuario usuario = usuarioService.obterPorLogin(email);
         if (usuario == null) {
-            throw new RuntimeException("Usuário não encontrado");
+            throw new UsernameNotFoundException("Usuário não encontrado");
         }
         return User.builder()
                 .username(usuario.getEmail())

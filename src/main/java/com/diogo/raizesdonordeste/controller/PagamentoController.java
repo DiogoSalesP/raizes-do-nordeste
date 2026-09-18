@@ -9,6 +9,7 @@ import com.diogo.raizesdonordeste.service.PagamentoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class PagamentoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('GERENTE')")
     public PagamentoResponseDTO salvar(@RequestBody @Valid PagamentoRequestDTO dto) {
         Pagamento pagamento = pagamentoService.salvar(dto);
         return PagamentoMapper.toResponse(pagamento);
@@ -30,6 +32,7 @@ public class PagamentoController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('GERENTE')")
     public List<PagamentoResponseDTO> buscarTodos() {
         return pagamentoService.buscarTodos()
                 .stream()
@@ -39,6 +42,7 @@ public class PagamentoController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('GERENTE')")
     public PagamentoResponseDTO buscarPorId(@PathVariable UUID id) {
         Pagamento pagamento = pagamentoService.buscarPorId(id);
         return PagamentoMapper.toResponse(pagamento);
@@ -46,6 +50,7 @@ public class PagamentoController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('GERENTE')")
     public PagamentoResponseDTO atualizarStatus(@PathVariable UUID id, @RequestBody @Valid AtualizarStatusPagamentoRequestDTO dto) {
         Pagamento pagamento = pagamentoService.atualizarStatusPagamento(id, dto);
         return PagamentoMapper.toResponse(pagamento);

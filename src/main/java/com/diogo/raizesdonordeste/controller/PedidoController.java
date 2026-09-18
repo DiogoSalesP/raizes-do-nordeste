@@ -11,6 +11,7 @@ import com.diogo.raizesdonordeste.service.PedidoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class PedidoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAnyRole('GERENTE', 'CLIENTE')")
     public PedidoResponseDTO salvar(@RequestBody @Valid PedidoRequestDTO dto) {
         Pedido pedido = pedidoService.salvar(dto);
         return PedidoMapper.toResponse(pedido);
@@ -32,6 +34,7 @@ public class PedidoController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('GERENTE')")
     public List<PedidoResponseDTO> buscarTodos() {
         return pedidoService.buscarTodos()
                 .stream()
@@ -41,6 +44,7 @@ public class PedidoController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('GERENTE')")
     public PedidoResponseDTO buscarPorId(@PathVariable UUID id) {
         Pedido pedido = pedidoService.buscarPorId(id);
         return PedidoMapper.toResponse(pedido);
@@ -48,6 +52,7 @@ public class PedidoController {
 
     @GetMapping("/pesquisa")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('GERENTE')")
     public List<PedidoResponseDTO> pesquisar(@RequestParam(value = "canal-pedido") CanalPedido canalPedido) {
         return pedidoService.pesquisa(canalPedido)
                 .stream()
@@ -56,6 +61,7 @@ public class PedidoController {
     }
     @PutMapping("/{id}/status")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('GERENTE')")
     public PedidoResponseDTO atualizar(@PathVariable UUID id, @RequestBody @Valid AtualizarStatusPedidoRequestDTO dto) {
         Pedido pedido = pedidoService.atualizarStatusPedido(id, dto);
         return PedidoMapper.toResponse(pedido);

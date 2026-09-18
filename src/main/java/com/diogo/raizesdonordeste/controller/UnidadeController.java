@@ -9,6 +9,7 @@ import com.diogo.raizesdonordeste.service.UnidadeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class UnidadeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('GERENTE')")
     public UnidadeResponseDTO salvar(@RequestBody @Valid UnidadeRequestDTO dto) {
         Unidade unidade = unidadeService.salvar(dto);
         return UnidadeMapper.toResponse(unidade);
@@ -30,6 +32,7 @@ public class UnidadeController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('GERENTE', 'CLIENTE')")
     public List<UnidadeResponseDTO> buscarTodos() {
         List<Unidade> unidades = unidadeService.buscarTodos();
         return unidades
@@ -40,6 +43,7 @@ public class UnidadeController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('GERENTE', 'CLIENTE')")
     public UnidadeResponseDTO buscarPorId(@PathVariable UUID id) {
         Unidade unidade = unidadeService.buscarPorId(id);
         return UnidadeMapper.toResponse(unidade);
@@ -47,6 +51,7 @@ public class UnidadeController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('GERENTE')")
     public UnidadeResponseDTO atualizar(@PathVariable UUID id, @RequestBody @Valid UnidadeRequestDTO dto) {
         Unidade unidade = unidadeService.atualizar(id, dto);
         return UnidadeMapper.toResponse(unidade);
@@ -54,6 +59,7 @@ public class UnidadeController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('GERENTE')")
     public void deletar(@PathVariable UUID id) {
         unidadeService.deletar(id);
     }

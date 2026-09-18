@@ -13,6 +13,7 @@ public record PedidoResponseDTO(
         StatusPedido statusPedido,
         BigDecimal valorTotal,
         String nomeCliente,
+        String emailCliente,
         List<ItemPedidoResponseDTO> itens
 ) {
 }
