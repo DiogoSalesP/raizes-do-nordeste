@@ -34,6 +34,11 @@ public class ProdutoService {
         return produtoRepository.findById(id).orElseThrow(() -> new RegistroNaoEncontradoException("Produto", id));
     }
 
+    public List<Produto> buscarProdutoPorUnidade(UUID idUnidade) {
+        return produtoRepository.findByUnidade_idUnidade(idUnidade);
+    }
+
+
     public List<Produto> buscarDisponivel() {
         return produtoRepository.findByDisponivel(true);
     }

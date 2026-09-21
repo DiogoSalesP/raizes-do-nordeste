@@ -48,6 +48,17 @@ public class ProdutoController {
         return ProdutoMapper.toResponse(produtos);
     }
 
+    @GetMapping("/unidade/{idUnidade}")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('GERENTE', 'CLIENTE')")
+    public List<ProdutoResponseDTO> buscarProdutoPorUnidade(@PathVariable UUID idUnidade){
+        List<Produto> produtos = produtoService.buscarProdutoPorUnidade(idUnidade);
+        return produtos
+                .stream()
+                .map(ProdutoMapper::toResponse)
+                .toList();
+    }
+
     @GetMapping("/disponiveis")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('GERENTE', 'CLIENTE')")
