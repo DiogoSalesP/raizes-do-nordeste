@@ -20,12 +20,15 @@ public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
     private final UnidadeService unidadeService;
+    private final EstoqueService estoqueService;
 
     public Produto salvar(ProdutoRequestDTO dto) {
         Produto produto = ProdutoMapper.toEntity(dto);
         Unidade unidade = unidadeService.buscarPorId(dto.idUnidade());
         produto.setUnidade(unidade);
-        return produtoRepository.save(produto);
+        produto = produtoRepository.save(produto);
+        estoqueService.salvar(produto);
+        return produto;
     }
 
     public Page<Produto> buscarTodos(Integer pagina, Integer tamanhoPagina) {

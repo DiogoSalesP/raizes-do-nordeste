@@ -2,7 +2,6 @@ package com.diogo.raizesdonordeste.controller;
 
 import com.diogo.raizesdonordeste.domain.Estoque;
 import com.diogo.raizesdonordeste.dto.request.AtualizarEstoqueRequestDTO;
-import com.diogo.raizesdonordeste.dto.request.EstoqueRequestDTO;
 import com.diogo.raizesdonordeste.dto.response.EstoqueResponseDTO;
 import com.diogo.raizesdonordeste.mapper.EstoqueMapper;
 import com.diogo.raizesdonordeste.service.EstoqueService;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -22,14 +20,6 @@ import java.util.UUID;
 public class EstoqueController {
 
     private final EstoqueService estoqueService;
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('GERENTE')")
-    public EstoqueResponseDTO salvar(@RequestBody @Valid EstoqueRequestDTO dto) {
-        Estoque estoque = estoqueService.salvar(dto);
-        return EstoqueMapper.toResponse(estoque);
-    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

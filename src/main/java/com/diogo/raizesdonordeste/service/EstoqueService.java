@@ -3,17 +3,14 @@ package com.diogo.raizesdonordeste.service;
 import com.diogo.raizesdonordeste.domain.Estoque;
 import com.diogo.raizesdonordeste.domain.Produto;
 import com.diogo.raizesdonordeste.dto.request.AtualizarEstoqueRequestDTO;
-import com.diogo.raizesdonordeste.dto.request.EstoqueRequestDTO;
 import com.diogo.raizesdonordeste.exception.OperacaoNaoPermitidaException;
 import com.diogo.raizesdonordeste.exception.RegistroNaoEncontradoException;
-import com.diogo.raizesdonordeste.mapper.EstoqueMapper;
 import com.diogo.raizesdonordeste.repository.EstoqueRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -21,13 +18,13 @@ import java.util.UUID;
 public class EstoqueService {
 
     private final EstoqueRepository estoqueRepository;
-    private final ProdutoService produtoService;
 
-    public Estoque salvar(EstoqueRequestDTO dto) {
-        Estoque estoque = EstoqueMapper.toEntity(dto);
-        Produto produto = produtoService.buscarPorId(dto.idProduto());
+    public void salvar(Produto produto) {
+        Estoque estoque = new Estoque();
+        estoque.setQuantidade(0);
+        estoque.setEstoqueMinimo(0);
         estoque.setProduto(produto);
-        return estoqueRepository.save(estoque);
+        estoqueRepository.save(estoque);
     }
 
     public Page<Estoque> buscarTodos(Integer pagina, Integer tamanhoPagina) {
