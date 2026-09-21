@@ -8,6 +8,7 @@ import com.diogo.raizesdonordeste.mapper.EstoqueMapper;
 import com.diogo.raizesdonordeste.service.EstoqueService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -33,11 +34,11 @@ public class EstoqueController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('GERENTE')")
-    public List<EstoqueResponseDTO> buscarTodos() {
-        return estoqueService.buscarTodos()
-                .stream()
-                .map(EstoqueMapper::toResponse)
-                .toList();
+    public Page<EstoqueResponseDTO> buscarTodos(
+            @RequestParam(value = "pagina", defaultValue = "0") Integer pagina,
+            @RequestParam(value = "tamanho-pagina", defaultValue = "10") Integer tamanhoPagina
+    ) {
+        return estoqueService.buscarTodos(pagina, tamanhoPagina).map(EstoqueMapper::toResponse);
     }
 
     @GetMapping("/{id}")

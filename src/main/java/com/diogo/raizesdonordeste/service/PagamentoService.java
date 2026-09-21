@@ -11,6 +11,8 @@ import com.diogo.raizesdonordeste.exception.RegistroNaoEncontradoException;
 import com.diogo.raizesdonordeste.mapper.PagamentoMapper;
 import com.diogo.raizesdonordeste.repository.PagamentoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,8 +41,9 @@ public class PagamentoService {
         return pagamentoRepository.save(pagamento);
     }
 
-    public List<Pagamento> buscarTodos() {
-        return pagamentoRepository.findAll();
+    public Page<Pagamento> buscarTodos(Integer pagina, Integer tamanhoPagina) {
+        PageRequest pageRequest = PageRequest.of(pagina, tamanhoPagina);
+        return pagamentoRepository.findAll(pageRequest);
     }
 
     public Pagamento buscarPorId(UUID id) {

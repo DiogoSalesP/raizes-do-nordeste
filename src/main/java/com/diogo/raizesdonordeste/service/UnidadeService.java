@@ -6,6 +6,8 @@ import com.diogo.raizesdonordeste.exception.RegistroNaoEncontradoException;
 import com.diogo.raizesdonordeste.mapper.UnidadeMapper;
 import com.diogo.raizesdonordeste.repository.UnidadeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,8 +24,9 @@ public class UnidadeService {
         return unidadeRepository.save(unidade);
     }
 
-    public List<Unidade> buscarTodos() {
-        return unidadeRepository.findAll();
+    public Page<Unidade> buscarTodos(Integer pagina, Integer tamanhoPagina) {
+        PageRequest pageRequest = PageRequest.of(pagina, tamanhoPagina);
+        return unidadeRepository.findAll(pageRequest);
     }
 
     public Unidade buscarPorId(UUID id) {

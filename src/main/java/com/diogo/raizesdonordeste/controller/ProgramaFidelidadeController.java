@@ -8,6 +8,7 @@ import com.diogo.raizesdonordeste.mapper.ProgramaFidelidadeMapper;
 import com.diogo.raizesdonordeste.service.ProgramaFidelidadeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -25,11 +26,12 @@ public class ProgramaFidelidadeController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('GERENTE')")
-    public List<ProgramaFidelidadeResponseDTO> buscarTodos() {
-        return fidelidadeService.buscarTodos()
-                .stream()
-                .map(ProgramaFidelidadeMapper::toResponse)
-                .toList();
+    public Page<ProgramaFidelidadeResponseDTO> buscarTodos(
+            @RequestParam(value = "pagina", defaultValue = "0") Integer pagina,
+            @RequestParam(value = "tamanho-pagina", defaultValue = "10") Integer tamanhoPagina
+    ) {
+        Page<ProgramaFidelidade> programaFidelidades = fidelidadeService.buscarTodos(pagina, tamanhoPagina);
+        return programaFidelidades.map(ProgramaFidelidadeMapper::toResponse);
     }
 
     @GetMapping("/{id}")

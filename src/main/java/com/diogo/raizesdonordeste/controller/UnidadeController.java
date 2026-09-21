@@ -8,6 +8,7 @@ import com.diogo.raizesdonordeste.mapper.UnidadeMapper;
 import com.diogo.raizesdonordeste.service.UnidadeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -33,12 +34,12 @@ public class UnidadeController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('GERENTE', 'CLIENTE')")
-    public List<UnidadeResponseDTO> buscarTodos() {
-        List<Unidade> unidades = unidadeService.buscarTodos();
-        return unidades
-                .stream()
-                .map(UnidadeMapper::toResponse)
-                .toList();
+    public Page<UnidadeResponseDTO> buscarTodos(
+            @RequestParam(value = "pagina", defaultValue = "0") Integer pagina,
+            @RequestParam(value = "tamanho-pagina", defaultValue = "10") Integer tamanhoPagina
+    ) {
+        Page<Unidade> unidades = unidadeService.buscarTodos(pagina, tamanhoPagina);
+        return unidades.map(UnidadeMapper::toResponse);
     }
 
     @GetMapping("/{id}")

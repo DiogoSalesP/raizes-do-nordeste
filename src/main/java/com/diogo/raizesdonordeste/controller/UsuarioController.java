@@ -9,6 +9,7 @@ import com.diogo.raizesdonordeste.mapper.UsuarioMapper;
 import com.diogo.raizesdonordeste.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -33,10 +34,12 @@ public class UsuarioController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('GERENTE')")
-    public List<UsuarioResponseDTO> buscarTodosUsuarios() {
-        return usuarioService.buscarTodos().stream()
-                .map(UsuarioMapper::toResponse)
-                .toList();
+    public Page<UsuarioResponseDTO> buscarTodosUsuarios(
+            @RequestParam(value = "pagina", defaultValue = "0") Integer pagina,
+            @RequestParam(value = "tamanho-pagina", defaultValue = "10") Integer tamanhoPagina
+    ) {
+        Page<Usuario> usuarios = usuarioService.buscarTodos(pagina, tamanhoPagina);
+        return usuarios.map(UsuarioMapper::toResponse);
     }
 
     @GetMapping("/{id}")

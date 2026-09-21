@@ -12,6 +12,8 @@ import com.diogo.raizesdonordeste.exception.RegistroNaoEncontradoException;
 import com.diogo.raizesdonordeste.mapper.PedidoMapper;
 import com.diogo.raizesdonordeste.repository.PedidoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -42,8 +44,9 @@ public class PedidoService {
         return pedidoRepository.save(pedido);
     }
 
-    public List<Pedido> buscarTodos() {
-        return pedidoRepository.findAll();
+    public Page<Pedido> buscarTodos(Integer pagina, Integer tamanhoPagina) {
+        PageRequest pageRequest = PageRequest.of(pagina, tamanhoPagina);
+        return pedidoRepository.findAll(pageRequest);
     }
 
     public Pedido buscarPorId(UUID id) {

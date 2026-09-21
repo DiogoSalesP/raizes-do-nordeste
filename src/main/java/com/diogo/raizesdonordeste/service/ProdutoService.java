@@ -7,6 +7,8 @@ import com.diogo.raizesdonordeste.exception.RegistroNaoEncontradoException;
 import com.diogo.raizesdonordeste.mapper.ProdutoMapper;
 import com.diogo.raizesdonordeste.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,8 +28,9 @@ public class ProdutoService {
         return produtoRepository.save(produto);
     }
 
-    public List<Produto> buscarTodos() {
-        return produtoRepository.findAll();
+    public Page<Produto> buscarTodos(Integer pagina, Integer tamanhoPagina) {
+        PageRequest pageRequest = PageRequest.of(pagina, tamanhoPagina);
+        return produtoRepository.findAll(pageRequest);
     }
 
     public Produto buscarPorId(UUID id) {

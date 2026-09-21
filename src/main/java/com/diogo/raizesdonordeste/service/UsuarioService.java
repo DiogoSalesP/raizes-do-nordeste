@@ -11,6 +11,9 @@ import com.diogo.raizesdonordeste.mapper.UsuarioMapper;
 import com.diogo.raizesdonordeste.repository.UsuarioRepository;
 import com.diogo.raizesdonordeste.validator.UsuarioValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -39,8 +42,9 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    public List<Usuario> buscarTodos() {
-        return usuarioRepository.findAll();
+    public Page<Usuario> buscarTodos(Integer pagina, Integer tamanhoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanhoPagina);
+        return usuarioRepository.findAll(pageable);
     }
 
     public Usuario buscarPorId(UUID id) {

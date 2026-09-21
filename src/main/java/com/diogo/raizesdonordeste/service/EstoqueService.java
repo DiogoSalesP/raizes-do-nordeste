@@ -9,6 +9,8 @@ import com.diogo.raizesdonordeste.exception.RegistroNaoEncontradoException;
 import com.diogo.raizesdonordeste.mapper.EstoqueMapper;
 import com.diogo.raizesdonordeste.repository.EstoqueRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,8 +30,9 @@ public class EstoqueService {
         return estoqueRepository.save(estoque);
     }
 
-    public List<Estoque> buscarTodos() {
-        return estoqueRepository.findAll();
+    public Page<Estoque> buscarTodos(Integer pagina, Integer tamanhoPagina) {
+        PageRequest pageRequest = PageRequest.of(pagina, tamanhoPagina);
+        return estoqueRepository.findAll(pageRequest);
     }
 
     public Estoque buscarPorId(UUID id) {

@@ -10,6 +10,7 @@ import com.diogo.raizesdonordeste.mapper.PedidoMapper;
 import com.diogo.raizesdonordeste.service.PedidoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -35,11 +36,11 @@ public class PedidoController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('GERENTE')")
-    public List<PedidoResponseDTO> buscarTodos() {
-        return pedidoService.buscarTodos()
-                .stream()
-                .map(PedidoMapper::toResponse)
-                .toList();
+    public Page<PedidoResponseDTO> buscarTodos(
+            @RequestParam(value = "pagina", defaultValue = "0") Integer pagina,
+            @RequestParam(value = "tamanho-pagina", defaultValue = "10") Integer tamanhoPagina
+    ) {
+        return pedidoService.buscarTodos(pagina, tamanhoPagina).map(PedidoMapper::toResponse);
     }
 
     @GetMapping("/{id}")

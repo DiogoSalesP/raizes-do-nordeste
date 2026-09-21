@@ -6,6 +6,8 @@ import com.diogo.raizesdonordeste.dto.request.ProgramaFidelidadeRequestDTO;
 import com.diogo.raizesdonordeste.exception.RegistroNaoEncontradoException;
 import com.diogo.raizesdonordeste.repository.ProgramaFidelidadeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,8 +20,9 @@ public class ProgramaFidelidadeService {
 
     private final ProgramaFidelidadeRepository fidelidadeRepository;
 
-    public List<ProgramaFidelidade> buscarTodos() {
-        return fidelidadeRepository.findAll();
+    public Page<ProgramaFidelidade> buscarTodos(Integer pagina, Integer tamanhoPagina) {
+        PageRequest pageRequest = PageRequest.of(pagina, tamanhoPagina);
+        return fidelidadeRepository.findAll(pageRequest);
     }
 
     public ProgramaFidelidade buscarPorId(UUID id) {

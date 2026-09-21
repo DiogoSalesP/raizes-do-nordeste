@@ -7,6 +7,7 @@ import com.diogo.raizesdonordeste.mapper.ProdutoMapper;
 import com.diogo.raizesdonordeste.service.ProdutoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -32,12 +33,11 @@ public class ProdutoController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('GERENTE', 'CLIENTE')")
-    public List<ProdutoResponseDTO> buscarTodosProdutos() {
-        List<Produto> produtos = produtoService.buscarTodos();
-        return produtos
-                .stream()
-                .map(ProdutoMapper::toResponse)
-                .toList();
+    public Page<ProdutoResponseDTO> buscarTodosProdutos(
+            @RequestParam(value = "pagina", defaultValue = "0") Integer pagina,
+            @RequestParam(value = "tamanho-pagina", defaultValue = "10") Integer tamanhoPagina    ) {
+        Page<Produto> produtos = produtoService.buscarTodos(pagina, tamanhoPagina);
+        return produtos.map(ProdutoMapper::toResponse);
     }
 
     @GetMapping("/{id}")

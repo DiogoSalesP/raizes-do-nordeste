@@ -8,6 +8,7 @@ import com.diogo.raizesdonordeste.mapper.PagamentoMapper;
 import com.diogo.raizesdonordeste.service.PagamentoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -33,11 +34,11 @@ public class PagamentoController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('GERENTE')")
-    public List<PagamentoResponseDTO> buscarTodos() {
-        return pagamentoService.buscarTodos()
-                .stream()
-                .map(PagamentoMapper::toResponse)
-                .toList();
+    public Page<PagamentoResponseDTO> buscarTodos(
+            @RequestParam(value = "pagina", defaultValue = "0") Integer pagina,
+            @RequestParam(value = "tamanho-pagina", defaultValue = "10") Integer tamanhoPagina
+    ) {
+        return pagamentoService.buscarTodos(pagina, tamanhoPagina).map(PagamentoMapper::toResponse);
     }
 
     @GetMapping("/{id}")
