@@ -1,6 +1,6 @@
-# Sistema de Agendamento - API REST
+# Raízes do Nordeste
 
-Esta é uma API RESTful desenvolvida para gerenciar o agendamento de consultas e compromissos. O sistema permite a criação, leitura, atualização e exclusão de agendamentos, além de validação de regras de negócios para evitar conflitos de horários.
+API REST desenvolvida em Java com Spring Boot para gerenciamento de uma rede de lanchonetes. O sistema contempla clientes, produtos, pedidos, pagamentos, estoque, unidades e funcionários, além de autenticação e um fluxo de pagamento simulado (mock).
 
 ---
 
