@@ -48,6 +48,7 @@ public class PedidoController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('GERENTE')")
+    @Operation(summary = "Buscar")
     @ApiResponses(@ApiResponse(responseCode = "200", description = "Busca realizada com sucesso."))
     public Page<PedidoResponseDTO> buscarTodos(
             @RequestParam(value = "pagina", defaultValue = "0") Integer pagina,

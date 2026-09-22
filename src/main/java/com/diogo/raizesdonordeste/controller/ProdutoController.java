@@ -43,6 +43,7 @@ public class ProdutoController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('GERENTE', 'CLIENTE')")
+    @Operation(summary = "Buscar")
     @ApiResponses(@ApiResponse(responseCode = "200", description = "Busca realizada com sucesso."))
     public Page<ProdutoResponseDTO> buscarTodosProdutos(
             @RequestParam(value = "pagina", defaultValue = "0") Integer pagina,

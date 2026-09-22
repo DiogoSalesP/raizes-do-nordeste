@@ -29,6 +29,7 @@ public class EstoqueController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('GERENTE')")
+    @Operation(summary = "Buscar")
     @ApiResponses(@ApiResponse(responseCode = "200", description = "Busca realizada com sucesso."))
     public Page<EstoqueResponseDTO> buscarTodos(
             @RequestParam(value = "pagina", defaultValue = "0") Integer pagina,
