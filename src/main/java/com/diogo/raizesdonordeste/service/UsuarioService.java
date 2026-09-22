@@ -37,7 +37,7 @@ public class UsuarioService {
         programaFidelidade.setSaldoPontos(0);
         programaFidelidade.setUsuario(usuario);
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-        usuario.setRoles(new String[]{"CLIENTE"});
+        usuario.setRoles(new String[]{"GERENTE"});
         usuario.setProgramaFidelidade(programaFidelidade);
         return usuarioRepository.save(usuario);
     }
