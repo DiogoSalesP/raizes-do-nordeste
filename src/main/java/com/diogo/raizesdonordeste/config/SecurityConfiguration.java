@@ -21,7 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class SecurityConfig {
+public class SecurityConfiguration {
 
     @Autowired
     private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
@@ -35,6 +35,14 @@ public class SecurityConfig {
                         exception.authenticationEntryPoint(customAuthenticationEntryPoint)
                 )
                 .authorizeHttpRequests(authorize -> {
+                    authorize.requestMatchers(
+                            "/v2/api-docs/**",
+                            "/v3/api-docs/**",
+                            "/swagger-resources/**",
+                            "/swagger-ui.html",
+                            "/swagger-ui/**",
+                            "/webjars/**"
+                    ).permitAll();
                     authorize.requestMatchers(HttpMethod.POST, "/usuarios").permitAll();
                     authorize.anyRequest().authenticated();
                 })
