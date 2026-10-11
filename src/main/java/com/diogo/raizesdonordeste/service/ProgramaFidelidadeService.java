@@ -30,7 +30,11 @@ public class ProgramaFidelidadeService {
     }
 
     public ProgramaFidelidade buscarPorEmail(String email) {
-        return fidelidadeRepository.findByUsuario_Email(email);
+        ProgramaFidelidade byUsuarioEmail = fidelidadeRepository.findByUsuario_Email(email);
+        if (byUsuarioEmail == null) {
+            throw new RegistroNaoEncontradoException(email);
+        }
+        return byUsuarioEmail;
     }
 
     public ProgramaFidelidade atualizar(String email, BigDecimal valorTotal) {

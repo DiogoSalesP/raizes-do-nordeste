@@ -11,3 +11,8 @@ spring:
       ddl-auto: update
     properties:
       hibernate.format_sql: true
+
+springdoc:
+  override-with-generic-response: false
+  swagger-ui:
+    operations-sorter: method

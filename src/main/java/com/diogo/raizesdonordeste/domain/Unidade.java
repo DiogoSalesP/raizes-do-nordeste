@@ -36,9 +36,6 @@ public class Unidade {
     @OneToMany(mappedBy = "unidade", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Produto> produtos;
 
-//    @OneToMany(mappedBy = "unidade", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Usuario> funcionarios;
-
     @ManyToOne
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;

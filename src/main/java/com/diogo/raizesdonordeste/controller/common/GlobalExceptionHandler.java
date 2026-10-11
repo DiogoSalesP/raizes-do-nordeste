@@ -5,8 +5,10 @@ import com.diogo.raizesdonordeste.dto.ErroResponse;
 import com.diogo.raizesdonordeste.exception.OperacaoNaoPermitidaException;
 import com.diogo.raizesdonordeste.exception.RegistroDuplicadoException;
 import com.diogo.raizesdonordeste.exception.RegistroNaoEncontradoException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,6 +21,17 @@ import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErroResponse handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+        return ErroResponse.respostaPadrao(e.getMessage());
+    }
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErroResponse handleBadCredentialsException(BadCredentialsException e) {
+        return ErroResponse.respostaPadrao(e.getMessage());
+    }
 
     @ExceptionHandler(OperacaoNaoPermitidaException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
