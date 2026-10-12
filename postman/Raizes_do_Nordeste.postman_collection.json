@@ -1,0 +1,2577 @@
+{
+  "info": {
+    "_postman_id": "f638f2f5-a9d6-4d27-8f58-b7ee97abdbdf",
+    "name": "Raizes do Nordeste",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "28358400",
+    "_collection_link": "https://go.postman.co/collection/28358400-f638f2f5-a9d6-4d27-8f58-b7ee97abdbdf?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "login - Sucesso",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.collectionVariables.set('token', response.accessToken);\n\npm.test(\"Status code do login\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Dados obrigatórios do usuario existem\", function () {\n    pm.expect(response.accessToken).to.exist;\n    pm.expect(response.tokenType).to.exist;\n    pm.expect(response.expiresIn).to.exist;\n});\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email_usuario}}\",\n  \"senha\": \"{{senha_usuario}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "login - Formato inválido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.test(\"Status code para credenciais inválidas\", function () {\n    pm.response.to.have.status(422);\n});\n\npm.test(\"Dados obrigatórios da mensagem de erro existem\", function () {\n    pm.expect(response.status).to.exist;\n    pm.expect(response.mensagem).to.exist;\n    pm.expect(response.erros).to.exist;\n});\n\npm.test(\"Mensagem de erro contém os valores esperados\", function () {\n    pm.expect(response.status).to.be.eql(422);\n    pm.expect(response.mensagem).to.be.eql(\"erro de validação\");\n    pm.expect(response.erros).to.be.eql([\n        {\n            \"campo\": \"email\",\n            \"erro\": \"e-mail inválido\"\n        },\n        {\n            \"campo\": \"email\",\n            \"erro\": \"e-mail deve ser um endereço válido\"\n        }\n    ]);\n});\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"emailinvalidogmail.com\",\n  \"senha\": \"SenhaInvalida123*\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "login - Campo obrigatório ausente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.test(\"Status code para senha inválida\", function () {\n    pm.response.to.have.status(422);\n});\n\npm.test(\"Dados obrigatórios da mensagem de erro existem\", function () {\n    pm.expect(response.status).to.exist;\n    pm.expect(response.mensagem).to.exist;\n    pm.expect(response.erros).to.exist;\n});\n\npm.test(\"Mensagem de erro contém os valores esperados\", function () {\n    pm.expect(response.status).to.be.eql(422);\n    pm.expect(response.mensagem).to.be.eql(\"erro de validação\");\n    pm.expect(response.erros).to.be.eql([        {\n            \"campo\": \"senha\",\n            \"erro\": \"campo senha obrigatório\"\n        }]);\n});\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"emailinvalido@gmail.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get_all_users - Acesso sem token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.test(\"Status code para credenciais inválidas\", function () {\n    pm.response.to.have.status(401);\n});\n\npm.test(\"Dados obrigatórios da mensagem de erro existem\", function () {\n    pm.expect(response.status).to.exist;\n    pm.expect(response.mensagem).to.exist;\n    pm.expect(response.erros).to.exist;\n});\n\npm.test(\"Mensagem de erro contém os valores esperados\", function () {\n    pm.expect(response.status).to.be.eql(401);\n    pm.expect(response.mensagem).to.be.eql(\"Acesso não autorizado. Credenciais inválidas ou ausentes.\");\n    pm.expect(response.erros).to.be.eql([]);\n});\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL_USUARIO}}?pagina=0&tamanho-pagina=10",
+              "host": [
+                "{{URL_USUARIO}}"
+              ],
+              "query": [
+                {
+                  "key": "pagina",
+                  "value": "0"
+                },
+                {
+                  "key": "tamanho-pagina",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get_all_users - Acesso com perfil sem permissão",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.test(\"Status code para credenciais inválidas\", function () {\n    pm.response.to.have.status(403);\n});\n\npm.test(\"Dados obrigatórios da mensagem de erro existem\", function () {\n    pm.expect(response.status).to.exist;\n    pm.expect(response.mensagem).to.exist;\n    pm.expect(response.erros).to.exist;\n});\n\npm.test(\"Mensagem de erro contém os valores esperados\", function () {\n    pm.expect(response.status).to.be.eql(403);\n    pm.expect(response.mensagem).to.be.eql(\"Acesso negado. Você não possui permissão para acessar este recurso.\");\n    pm.expect(response.erros).to.be.eql([]);\n});\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL_USUARIO}}?pagina=0&tamanho-pagina=10",
+              "host": [
+                "{{URL_USUARIO}}"
+              ],
+              "query": [
+                {
+                  "key": "pagina",
+                  "value": "0"
+                },
+                {
+                  "key": "tamanho-pagina",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Usuario",
+      "item": [
+        {
+          "name": "POSITIVO",
+          "item": [
+            {
+              "name": "create_user - Sucesso",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const response = pm.response.json();\n\npm.collectionVariables.set(\"id_usuario\", response.idUsuario);\n\npm.test(\"Status code da criação do usuario\", function () {\n    pm.response.to.have.status(201);\n});\n\npm.test(\"Dados obrigatórios do usuario existem\", function () {\n    pm.expect(response.idUsuario).to.exist;\n    pm.expect(response.nome).to.exist;\n    pm.expect(response.email).to.exist;\n    pm.expect(response.telefone).to.exist;\n    pm.expect(response.cadastro).to.exist;\n    pm.expect(response.nivelFidelidade).to.exist;\n    pm.expect(response.roles).to.exist;\n});\n\npm.test(\"Dados retornados do usuario são os mesmos enviados\", function () {\n    pm.expect(response.nome).to.eql(pm.collectionVariables.get('nome_usuario'));\n    pm.expect(response.email).to.eql(pm.collectionVariables.get('email_usuario'));\n    pm.expect(response.telefone).to.eql(pm.collectionVariables.get('telefone_usuario'));\n});"
+                    ]
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "function gerarSenha() {\n  const maiusculas = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';\n  const minusculas = 'abcdefghijklmnopqrstuvwxyz';\n  const numeros = '0123456789';\n  const especiais = '@#$%';\n  const todosCaracteres = maiusculas + minusculas + numeros + especiais;\n  \n  // Gera um tamanho aleatório entre 8 e 12\n  const tamanho = Math.floor(Math.random() * 5) + 8;\n  \n  // Garante pelo menos um de cada tipo\n  let senha = [\n    maiusculas[Math.floor(Math.random() * maiusculas.length)],\n    minusculas[Math.floor(Math.random() * minusculas.length)],\n    numeros[Math.floor(Math.random() * numeros.length)],\n    especiais[Math.floor(Math.random() * especiais.length)]\n  ];\n  \n  // Completa o restante da senha\n  for (let i = senha.length; i < tamanho; i++) {\n    senha.push(todosCaracteres[Math.floor(Math.random() * todosCaracteres.length)]);\n  }\n  \n  // Embaralha a senha\n  for (let i = senha.length - 1; i > 0; i--) {\n    const j = Math.floor(Math.random() * (i + 1));\n    [senha[i], senha[j]] = [senha[j], senha[i]];\n  }\n  \n  return senha.join('');\n}\n\nfunction gerarTelefone() {\n    const primeiroDigito = Math.floor(Math.random() * 9) + 1;\n\n    const restante = Array(10)\n        .fill()\n        .map(() => Math.floor(Math.random() * 10));\n\n    return [primeiroDigito, ...restante].join('');\n}\n\npm.collectionVariables.set('nome_usuario', pm.variables.replaceIn('{{$randomFirstName}}') + \" \" + pm.variables.replaceIn('{{$randomLastName}}'));\npm.collectionVariables.set('email_usuario', pm.variables.replaceIn('{{$randomEmail}}'));\npm.collectionVariables.set('senha_usuario', gerarSenha());\npm.collectionVariables.set('telefone_usuario', gerarTelefone());"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"nome\": \"{{nome_usuario}}\",\n    \"email\": \"{{email_usuario}}\",\n    \"senha\": \"{{senha_usuario}}\",\n    \"telefone\": \"{{telefone_usuario}}\"\n}\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{URL_USUARIO}}",
+                  "host": [
+                    "{{URL_USUARIO}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "get_all_users",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const response = pm.response.json();\n\npm.test(\"Status code da buscar do usuario\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Deve retornar pelo menos um usuário\", function () {\n    pm.expect(response.content.length).to.be.above(0);\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{URL_USUARIO}}?pagina=0&tamanho-pagina=10",
+                  "host": [
+                    "{{URL_USUARIO}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "pagina",
+                      "value": "0"
+                    },
+                    {
+                      "key": "tamanho-pagina",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "get_user_by_id",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const response = pm.response.json();\n\npm.test(\"Status code da busca do usuario\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Dados obrigatórios do usuario existem\", function () {\n    pm.expect(response.idUsuario).to.exist;\n    pm.expect(response.nome).to.exist;\n    pm.expect(response.email).to.exist;\n    pm.expect(response.telefone).to.exist;\n    pm.expect(response.cadastro).to.exist;\n    pm.expect(response.nivelFidelidade).to.exist;\n    pm.expect(response.roles).to.exist;\n});\n\npm.test(\"Dados retornados são os mesmos enviados\", function () {\n    pm.expect(response.idUsuario).to.be.eql(pm.collectionVariables.get(\"id_usuario\"))\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{URL_USUARIO}}/{{id_usuario}}",
+                  "host": [
+                    "{{URL_USUARIO}}"
+                  ],
+                  "path": [
+                    "{{id_usuario}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update_user",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "function gerarSenha() {\n  const maiusculas = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';\n  const minusculas = 'abcdefghijklmnopqrstuvwxyz';\n  const numeros = '0123456789';\n  const especiais = '@#$%';\n  const todosCaracteres = maiusculas + minusculas + numeros + especiais;\n  \n  // Gera um tamanho aleatório entre 8 e 12\n  const tamanho = Math.floor(Math.random() * 5) + 8;\n  \n  // Garante pelo menos um de cada tipo\n  let senha = [\n    maiusculas[Math.floor(Math.random() * maiusculas.length)],\n    minusculas[Math.floor(Math.random() * minusculas.length)],\n    numeros[Math.floor(Math.random() * numeros.length)],\n    especiais[Math.floor(Math.random() * especiais.length)]\n  ];\n  \n  // Completa o restante da senha\n  for (let i = senha.length; i < tamanho; i++) {\n    senha.push(todosCaracteres[Math.floor(Math.random() * todosCaracteres.length)]);\n  }\n  \n  // Embaralha a senha\n  for (let i = senha.length - 1; i > 0; i--) {\n    const j = Math.floor(Math.random() * (i + 1));\n    [senha[i], senha[j]] = [senha[j], senha[i]];\n  }\n  \n  return senha.join('');\n}\n\nfunction gerarTelefone() {\n    const primeiroDigito = Math.floor(Math.random() * 9) + 1;\n\n    const restante = Array(10)\n        .fill()\n        .map(() => Math.floor(Math.random() * 10));\n\n    return [primeiroDigito, ...restante].join('');\n}\n\npm.collectionVariables.set('update_nome_usuario', pm.variables.replaceIn('{{$randomFirstName}}') + \" \" + pm.variables.replaceIn('{{$randomLastName}}'));\npm.collectionVariables.set('update_email_usuario', pm.variables.replaceIn('{{$randomEmail}}'));\npm.collectionVariables.set('update_senha_usuario', gerarSenha());\npm.collectionVariables.set('update_telefone_usuario', gerarTelefone());\n\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const response = pm.response.json();\n\npm.test(\"Status code da atualização do usuario\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Dados obrigatórios da atualizado do usuario existem\", function () {\n    pm.expect(response.idUsuario).to.exist;\n    pm.expect(response.nome).to.exist;\n    pm.expect(response.email).to.exist;\n    pm.expect(response.telefone).to.exist;\n    pm.expect(response.cadastro).to.exist;\n    pm.expect(response.nivelFidelidade).to.exist;\n    pm.expect(response.roles).to.exist;\n});\n\npm.test(\"Dados retornados da atualizadosão do usuario são os mesmos enviados\", function () {\n    pm.expect(response.nome).to.eql(pm.collectionVariables.get('update_nome_usuario'));\n    pm.expect(response.email).to.eql(pm.collectionVariables.get('update_email_usuario'));\n    pm.expect(response.telefone).to.eql(pm.collectionVariables.get('update_telefone_usuario'));\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"nome\": \"{{update_nome_usuario}}\",\n    \"email\": \"{{update_email_usuario}}\",\n    \"senha\": \"{{update_senha_usuario}}\",\n    \"telefone\": \"{{update_telefone_usuario}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{URL_USUARIO}}/{{id_usuario}}",
+                  "host": [
+                    "{{URL_USUARIO}}"
+                  ],
+                  "path": [
+                    "{{id_usuario}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update_role_user",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const response = pm.response.json();\n\npm.test(\"Status code da atualização da role do usuario\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Dados obrigatórios da atualizado do usuario existem\", function () {\n    pm.expect(response.idUsuario).to.exist;\n    pm.expect(response.nome).to.exist;\n    pm.expect(response.email).to.exist;\n    pm.expect(response.telefone).to.exist;\n    pm.expect(response.cadastro).to.exist;\n    pm.expect(response.nivelFidelidade).to.exist;\n    pm.expect(response.roles).to.exist;\n});\n\npm.test(\"Dados retornados da atualizadosão do usuario são os mesmos enviados\", function () {\n    pm.expect(response.idUsuario).to.eql(pm.collectionVariables.get(\"id_usuario\"));\n    pm.expect(response.roles).to.eql([\"ADMIN\", \"USUARIO\", \"GERENTE\"]);\n});"
+                    ]
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "function sortearRole() {\n  const roles = [\n    \"GERENTE\",\n    \"ADMIN\",\n    \"CLIENTE\"\n  ];\n\n  return roles[Math.floor(Math.random() * roles.length)];\n}\n\npm.collectionVariables.set('update_role', [sortearRole()])"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"roles\": [\"{{update_role}}\"]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{URL_USUARIO}}/roles/{{id_usuario}}",
+                  "host": [
+                    "{{URL_USUARIO}}"
+                  ],
+                  "path": [
+                    "roles",
+                    "{{id_usuario}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "delete_user",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Status code da exclusão do usuario\", function () {\n    pm.response.to.have.status(204);\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{URL_USUARIO}}/{{id_usuario}}",
+                  "host": [
+                    "{{URL_USUARIO}}"
+                  ],
+                  "path": [
+                    "{{id_usuario}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "NEGATIVO",
+          "item": [
+            {
+              "name": "create_user - Email inválido",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const response = pm.response.json();\n\npm.test(\"Status code para email inválido\", function () {\n    pm.response.to.have.status(422);\n});\n\npm.test(\"Dados obrigatórios da mensagem de erro existem\", function () {\n    pm.expect(response.status).to.exist;\n    pm.expect(response.mensagem).to.exist;\n    pm.expect(response.erros).to.exist;\n});\n\npm.test(\"Mensagem de erro contém os valores esperados\", function () {\n    pm.expect(response.status).to.be.eql(422);\n    pm.expect(response.mensagem).to.be.eql(\"erro de validação\");\n    pm.expect(response.erros).to.be.eql([\n        {\n            \"campo\": \"email\",\n            \"erro\": \"e-mail deve ser um endereço válido\"\n        },\n        {\n            \"campo\": \"email\",\n            \"erro\": \"e-mail inválido\"\n        }\n    ]);\n});\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"nome\": \"{{nome_usuario}}\",\n    \"email\": \"diogouninter.com\",\n    \"senha\": \"{{senha_usuario}}\",\n    \"telefone\": \"{{telefone_usuario}}\"\n}\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{URL_USUARIO}}",
+                  "host": [
+                    "{{URL_USUARIO}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "create_user - Email já cadastrado",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const response = pm.response.json();\n\npm.test(\"Status code para email já cadastrado\", function () {\n    pm.response.to.have.status(409);\n});\n\npm.test(\"Dados obrigatórios da mensagem de erro existem\", function () {\n    pm.expect(response.status).to.exist;\n    pm.expect(response.mensagem).to.exist;\n    pm.expect(response.erros).to.exist;\n});\n\npm.test(\"Mensagem de erro contém os valores esperados\", function () {\n    pm.expect(response.status).to.be.eql(409);\n    pm.expect(response.mensagem).to.be.eql(\"Email já cadastrado!\");\n    pm.expect(response.erros).to.be.eql([]);\n});\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"nome\": \"{{nome_usuario}}\",\n    \"email\": \"{{email_usuario}}\",\n    \"senha\": \"{{senha_usuario}}\",\n    \"telefone\": \"{{telefone_usuario}}\"\n}\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{URL_USUARIO}}",
+                  "host": [
+                    "{{URL_USUARIO}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Unidade",
+      "item": [
+        {
+          "name": "create_unit",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.collectionVariables.set('id_unidade', response.idUnidade);\n\npm.test(\"Status code da criação da unidade\", () => {\n    pm.response.to.have.status(201);\n});\n\npm.test(\"Dados obrigatórios da unidade existem\", () => {\n    pm.expect(response.idUnidade).to.exist;\n    pm.expect(response.nome).to.exist;\n    pm.expect(response.endereco).to.exist;\n    pm.expect(response.cidade).to.exist;\n    pm.expect(response.estado).to.exist;\n    pm.expect(response.telefone).to.exist;\n});\n\npm.test(\"Dados retornados da unidade são os mesmos enviados\", () => {\n    pm.expect(response.nome).to.be.eql(pm.collectionVariables.get('nome_unidade'));\n    pm.expect(response.endereco).to.be.eql(pm.collectionVariables.get('endereco_unidade'));\n    pm.expect(response.cidade).to.be.eql(pm.collectionVariables.get('cidade_unidade'));\n    pm.expect(response.estado).to.be.eql(pm.collectionVariables.get('estado_unidade'));\n    pm.expect(response.telefone).to.be.eql(pm.collectionVariables.get('telefone_unidade'));\n});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "\nfunction gerarTelefone() {\n    const primeiroDigito = Math.floor(Math.random() * 9) + 1;\n\n    const restante = Array(10)\n        .fill()\n        .map(() => Math.floor(Math.random() * 10));\n\n    return [primeiroDigito, ...restante].join('');\n}\n\n\npm.collectionVariables.set('nome_unidade', pm.variables.replaceIn('{{$randomCompanyName}}'));\npm.collectionVariables.set('endereco_unidade', pm.variables.replaceIn('{{$randomStreetAddress}}'));\npm.collectionVariables.set('cidade_unidade', pm.variables.replaceIn('{{$randomCity}}'));\npm.collectionVariables.set('estado_unidade', pm.variables.replaceIn('{{$randomCountryCode}}'));\npm.collectionVariables.set('telefone_unidade', gerarTelefone());"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nome\": \"{{nome_unidade}}\",\n    \"endereco\": \"{{endereco_unidade}}\",\n    \"cidade\": \"{{cidade_unidade}}\",\n    \"estado\": \"{{estado_unidade}}\",\n    \"telefone\": \"{{telefone_unidade}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_UNIDADE}}",
+              "host": [
+                "{{URL_UNIDADE}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get_all_unit",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code de busca de unidade\", () => {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Deve retorna pelo menos uma unidade\", () => {\n    pm.expect(pm.response.json().content.length).to.be.above(0);\n});"
+                ]
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_UNIDADE}}?pagina=0&tamanho-pagina=10",
+              "host": [
+                "{{URL_UNIDADE}}"
+              ],
+              "query": [
+                {
+                  "key": "pagina",
+                  "value": "0"
+                },
+                {
+                  "key": "tamanho-pagina",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get_unit_by_id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.test(\"Status code da busca por id\", () => {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Dados obrigatórios da unidade existem\", () => {\n    pm.expect(response.idUnidade).to.exist;\n    pm.expect(response.nome).to.exist;\n    pm.expect(response.endereco).to.exist;\n    pm.expect(response.cidade).to.exist;\n    pm.expect(response.estado).to.exist;\n    pm.expect(response.telefone).to.exist;\n});\n\npm.test(\"Dados retornados da unidade são os mesmos enviados\", () => {\n    pm.expect(response.idUnidade).to.be.eql(pm.collectionVariables.get('id_unidade'));\n});"
+                ]
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_UNIDADE}}/{{id_unidade}}",
+              "host": [
+                "{{URL_UNIDADE}}"
+              ],
+              "path": [
+                "{{id_unidade}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update_unit",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "function gerarTelefone() {\n    const primeiroDigito = Math.floor(Math.random() * 9) + 1;\n\n    const restante = Array(10)\n        .fill()\n        .map(() => Math.floor(Math.random() * 10));\n\n    return [primeiroDigito, ...restante].join('');\n}\n\npm.collectionVariables.set('update_nome_unidade', pm.variables.replaceIn('{{$randomCompanyName}}'));\npm.collectionVariables.set('update_endereco_unidade', pm.variables.replaceIn('{{$randomStreetAddress}}'));\npm.collectionVariables.set('update_cidade_unidade', pm.variables.replaceIn('{{$randomCity}}'));\npm.collectionVariables.set('update_estado_unidade', pm.variables.replaceIn('{{$randomCountryCode}}'));\npm.collectionVariables.set('update_telefone_unidade', gerarTelefone());"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.test(\"Status code da criação de unidade\", () => {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Dados obrigatórios da unidade existem\", () => {\n    pm.expect(response.idUnidade).to.exist;\n    pm.expect(response.nome).to.exist;\n    pm.expect(response.endereco).to.exist;\n    pm.expect(response.cidade).to.exist;\n    pm.expect(response.estado).to.exist;\n    pm.expect(response.telefone).to.exist;\n});\n\npm.test(\"Dados retornados da unidade são os mesmos enviados\", () => {\n    pm.expect(response.nome).to.be.eql(pm.collectionVariables.get('update_nome_unidade'));\n    pm.expect(response.endereco).to.be.eql(pm.collectionVariables.get('update_endereco_unidade'));\n    pm.expect(response.cidade).to.be.eql(pm.collectionVariables.get('update_cidade_unidade'));\n    pm.expect(response.estado).to.be.eql(pm.collectionVariables.get('update_estado_unidade'));\n    pm.expect(response.telefone).to.be.eql(pm.collectionVariables.get('update_telefone_unidade'));\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nome\": \"{{update_nome_unidade}}\",\n    \"endereco\": \"{{update_endereco_unidade}}\",\n    \"cidade\": \"{{update_cidade_unidade}}\",\n    \"estado\": \"{{update_estado_unidade}}\",\n    \"telefone\": \"{{update_telefone_unidade}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_UNIDADE}}/{{id_unidade}}",
+              "host": [
+                "{{URL_UNIDADE}}"
+              ],
+              "path": [
+                "{{id_unidade}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete_unit",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code da exclusão de unidade\", () => {\n    pm.response.to.have.status(204);\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_UNIDADE}}/{{id_unidade}}",
+              "host": [
+                "{{URL_UNIDADE}}"
+              ],
+              "path": [
+                "{{id_unidade}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Produto",
+      "item": [
+        {
+          "name": "create_product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.collectionVariables.set('id_produto', response.idProduto)\n\npm.test(\"Status code da criação do produto\", function () {\n    pm.response.to.have.status(201);\n});\n\npm.test(\"Dados obrigatórios do produto existem\", function () {\n    pm.expect(response.idProduto).to.exist;\n    pm.expect(response.nome).to.exist;\n    pm.expect(response.descricao).to.exist;\n    pm.expect(response.preco).to.exist;\n    pm.expect(response.disponivel).to.exist;\n    pm.expect(response.unidade).to.exist;\n});\n\npm.test(\"Dados retornados do produto são os mesmos enviados\", function () {\n    pm.expect(response.nome).to.eql(pm.collectionVariables.get('nome_produto'));\n    pm.expect(response.descricao).to.eql(pm.collectionVariables.get('descricao_produto'));\n    pm.expect(response.preco).to.eql(Number(pm.collectionVariables.get('preco_produto')));\n    pm.expect(response.disponivel).to.eql(pm.collectionVariables.get('disponivel_produto'));\n    pm.expect(response.unidade).to.eql(pm.collectionVariables.get('nome_unidade'))\n});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('nome_produto', pm.variables.replaceIn('{{$randomProduct}}'));\npm.collectionVariables.set('descricao_produto', pm.variables.replaceIn('{{$randomProductAdjective}}'));\npm.collectionVariables.set('preco_produto', pm.variables.replaceIn('{{$randomInt}}'));\n\nconst disponivel = pm.variables.replaceIn('{{$randomBoolean}}') === 'true';\npm.collectionVariables.set('disponivel_produto', disponivel);\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nome\": \"{{nome_produto}}\",\n    \"descricao\": \"{{descricao_produto}}\",\n    \"preco\": {{preco_produto}},\n    \"disponivel\": {{disponivel_produto}},\n    \"idUnidade\": \"{{id_unidade}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_PRODUTO}}",
+              "host": [
+                "{{URL_PRODUTO}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get_all_produtct",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const posProdutoAle = pm.response.json().content.length - 1\n\npm.collectionVariables.set('id_produto_aleatorio', pm.response.json().content[posProdutoAle].idProduto)\npm.collectionVariables.set('nome_produto_aleatorio', pm.response.json().content[posProdutoAle].nome)\n\npm.collectionVariables.set('id_produto_aleatorio_1', pm.response.json().content[posProdutoAle].idProduto)\npm.collectionVariables.set('nome_produto_aleatorio_1', pm.response.json().content[posProdutoAle].nome)\n\nconsole.log(pm.response.json().content.length - 1)\n\n\npm.test(\"Status code da buscar do produto\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Deve retornar pelo menos um produto\", function () {\n    pm.expect(pm.response.json().content.length).to.be.above(0);\n});"
+                ]
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_PRODUTO}}?pagina=0&tamanho-pagina=50",
+              "host": [
+                "{{URL_PRODUTO}}"
+              ],
+              "query": [
+                {
+                  "key": "pagina",
+                  "value": "0"
+                },
+                {
+                  "key": "tamanho-pagina",
+                  "value": "50"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get_produtc_by_id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.environment.set('id_produto', response.idProduto)\n\npm.test(\"Status code da busca do produto\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Produto criado possui identificador\", function () {\n    pm.expect(response.idProduto).to.exist;\n});\n\npm.test(\"Dados obrigatórios do produto existem\", function () {\n    pm.expect(response.nome).to.exist;\n    pm.expect(response.descricao).to.exist;\n    pm.expect(response.preco).to.exist;\n    pm.expect(response.disponivel).to.exist;\n    pm.expect(response.unidade).to.exist;\n\n});\n\npm.test(\"Dados retornados do produto são os mesmos enviados\", function () {\n    pm.expect(response.idProduto).to.eql(pm.collectionVariables.get(\"id_produto\"));\n});"
+                ]
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_PRODUTO}}/{{id_produto}}",
+              "host": [
+                "{{URL_PRODUTO}}"
+              ],
+              "path": [
+                "{{id_produto}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get_produtc_by_unit",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.test(\"Status code da busca do produto\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Produto criado possui identificador\", function () {\n    response.forEach((produto) => {\n    pm.expect(produto.nome).to.exist;\n    pm.expect(produto.descricao).to.exist;\n    pm.expect(produto.preco).to.exist;\n    pm.expect(produto.disponivel).to.exist;\n    pm.expect(produto.unidade).to.exist;\n    })\n});\n\npm.test(\"Dados retornados do produto são os mesmos enviados\", function () {\n    response.forEach((unidade) => {\n        pm.expect(unidade.unidade).to.eql(pm.collectionVariables.get(\"nome_unidade\"));\n    })\n});\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL_PRODUTO}}/unidade/{{id_unidade}}",
+              "host": [
+                "{{URL_PRODUTO}}"
+              ],
+              "path": [
+                "unidade",
+                "{{id_unidade}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get_all_produtct_available",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.test(\"Status code da buscar do produto\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Deve retornar todos os produtos disponíveis\", function () {\n    pm.expect(response).to.be.an(\"array\").and.not.empty;\n\n    response.forEach((produto) => {\n        pm.expect(produto.disponivel).to.eql(true)\n    })\n\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL_PRODUTO}}/disponiveis",
+              "host": [
+                "{{URL_PRODUTO}}"
+              ],
+              "path": [
+                "disponiveis"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update_product",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('update_nome_produto', pm.variables.replaceIn('{{$randomProduct}}'));\npm.collectionVariables.set('update_descricao_produto', pm.variables.replaceIn('{{$randomProductAdjective}}'));\npm.collectionVariables.set('update_preco_produto', pm.variables.replaceIn('{{$randomInt}}'));\n\nconst disponivel = pm.variables.replaceIn('{{$randomBoolean}}') === 'true';\npm.collectionVariables.set('update_disponivel_produto', disponivel);\n"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.test(\"Status code da criação do produto\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Dados obrigatórios do produto existem\", function () {\n    pm.expect(response.idProduto).to.exist;\n    pm.expect(response.nome).to.exist;\n    pm.expect(response.descricao).to.exist;\n    pm.expect(response.preco).to.exist;\n    pm.expect(response.disponivel).to.exist;\n    pm.expect(response.unidade).to.exist;\n\n});\n\npm.test(\"Dados retornados do produto são os mesmos enviados\", function () {\n    pm.expect(response.nome).to.eql(pm.collectionVariables.get('update_nome_produto'));\n    pm.expect(response.descricao).to.eql(pm.collectionVariables.get('update_descricao_produto'));\n    pm.expect(response.preco).to.eql(Number(pm.collectionVariables.get('update_preco_produto')));\n    pm.expect(response.disponivel).to.eql(pm.collectionVariables.get('update_disponivel_produto'));\n    pm.expect(response.unidade).to.eql(pm.collectionVariables.get('nome_unidade'))\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nome\": \"{{update_nome_produto}}\",\n    \"descricao\": \"{{update_descricao_produto}}\",\n    \"preco\": {{update_preco_produto}},\n    \"disponivel\": {{update_disponivel_produto}},\n    \"idUnidade\": \"{{id_unidade}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_PRODUTO}}/{{id_produto}}",
+              "host": [
+                "{{URL_PRODUTO}}"
+              ],
+              "path": [
+                "{{id_produto}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete_product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code da exclusão do produto\", function () {\n    pm.response.to.have.status(204);\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_PRODUTO}}/{{id_produto}}",
+              "host": [
+                "{{URL_PRODUTO}}"
+              ],
+              "path": [
+                "{{id_produto}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Estoque",
+      "item": [
+        {
+          "name": "get_all_inventory",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.collectionVariables.set('id_estoque', response.content[0].idEstoque)\n\npm.test(\"Status code da busca do estoque\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Deve retorna pelo menos um estoque\", () => {\n    pm.expect(response.content.length).to.be.above(0);\n})\n\npm.test(\"Dados obrigatórios do estoque existem\", function () {\n    response.content.forEach((estoque) => {\n        pm.expect(estoque.idEstoque).to.exist;\n        pm.expect(estoque.quantidade).to.exist;\n        pm.expect(estoque.estoqueMinimo).to.exist;\n        pm.expect(estoque.produto).to.exist;\n    })\n});\n"
+                ]
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_ESTOQUE}}",
+              "host": [
+                "{{URL_ESTOQUE}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get_inventory_by_id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.test(\"Status da busca do estoque\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Dados obrigatórios do estoque existem\", function () {\n    pm.expect(response.idEstoque).to.exist;\n    pm.expect(response.quantidade).to.exist;\n    pm.expect(response.estoqueMinimo).to.exist;\n    pm.expect(response.produto).to.exist;\n});\n\npm.test(\"Dados retornados são os mesmos enviados\", function () {\n    pm.expect(response.idEstoque).to.eql(pm.collectionVariables.get(\"id_estoque\"));\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL_ESTOQUE}}/{{id_estoque}}",
+              "host": [
+                "{{URL_ESTOQUE}}"
+              ],
+              "path": [
+                "{{id_estoque}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get_inventory_by_id_product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.test(\"Status code da busca do estoque\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Dados obrigatórios do estoque existem\", function () {\n    pm.expect(response.idEstoque).to.exist;\n    pm.expect(response.quantidade).to.exist;\n    pm.expect(response.estoqueMinimo).to.exist;\n    pm.expect(response.produto).to.exist;\n});\n\npm.test(\"Dados retornados são os mesmos enviados\", function () {\n    pm.expect(response.produto).to.eql(pm.collectionVariables.get('nome_produto_aleatorio'));\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL_ESTOQUE}}/produto/{{id_produto_aleatorio}}",
+              "host": [
+                "{{URL_ESTOQUE}}"
+              ],
+              "path": [
+                "produto",
+                "{{id_produto_aleatorio}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update_inventory",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.test(\"Status code da atualização do estoque\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Dados obrigatórios do estoque existem\", function () {\n    pm.expect(response.idEstoque).to.exist;\n    pm.expect(response.quantidade).to.exist;\n    pm.expect(response.estoqueMinimo).to.exist;\n    pm.expect(response.produto).to.exist;\n});\n\npm.test(\"Dados retornados do estoque são os mesmos enviados\", function () {\n    pm.expect(response.idEstoque).to.eql(pm.collectionVariables.get('id_estoque'));\n    pm.expect(response.quantidade).to.eql(Number(pm.collectionVariables.get('quantidade_estoque')));\n    pm.expect(response.estoqueMinimo).to.eql(Number(pm.collectionVariables.get('minimo_estoque')));\n});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const qtd = pm.variables.replaceIn('{{$randomInt}}');\nconst minimo = pm.variables.replaceIn('{{$randomInt}}')\n\npm.collectionVariables.set('quantidade_estoque', qtd)\npm.collectionVariables.set('minimo_estoque', minimo)"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"quantidade\": {{quantidade_estoque}},\n    \"estoqueMinimo\": {{minimo_estoque}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_ESTOQUE}}/{{id_estoque}}",
+              "host": [
+                "{{URL_ESTOQUE}}"
+              ],
+              "path": [
+                "{{id_estoque}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Pedido",
+      "item": [
+        {
+          "name": "create_order - Sucesso",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.collectionVariables.set('id_pedido', response.idPedido);\npm.collectionVariables.set('valor_total', response.valorTotal);\n\npm.test(\"Status code da criação do pedido\", function () {\n    pm.response.to.have.status(201);\n});\n\npm.test(\"Dados obrigatórios do pedido existem\", function () {\n    pm.expect(response.idPedido).to.exist;\n    pm.expect(response.canalPedido).to.exist;\n    pm.expect(response.statusPedido).to.exist;\n    pm.expect(response.valorTotal).to.exist;\n    pm.expect(response.nomeCliente).to.exist;\n    pm.expect(response.itens).to.exist;\n\n    response.itens.forEach((itens) => {\n        pm.expect(itens.idItemPedido).to.exist;\n        pm.expect(itens.nomeProduto).to.exist;\n        pm.expect(itens.observacao).to.exist;\n        pm.expect(itens.quantidade).to.exist;\n        pm.expect(itens.precoUnitario).to.exist;\n    })\n});\n\n\npm.test(\"Dados retornados do pedido são os mesmos enviados\", function () {\n    pm.expect(response.canalPedido).to.eql(pm.collectionVariables.get(\"canal_pedido\"));\n    pm.expect(response.nomeCliente).to.eql(pm.collectionVariables.get(\"nome_usuario\"));\n\n    pm.expect(response.itens[0].nomeProduto).to.eql(pm.collectionVariables.get(\"nome_produto_aleatorio_1\"));\n    pm.expect(response.itens[0].quantidade).to.eql(Number(pm.collectionVariables.get(\"quantidade_item_1\")));\n    pm.expect(response.itens[0].observacao).to.eql(pm.collectionVariables.get(\"obs_item_1\"));\n\n\n});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "function sortearCanalPedido() {\n  const canalPedido = [\n    \"APP\",\n    \"TOTEM\",\n    \"BALCAO\",\n    \"PICKUP\",\n    \"WEB\"\n  ];\n\n  return canalPedido[Math.floor(Math.random() * canalPedido.length)];\n}\n\npm.collectionVariables.set('canal_pedido', sortearCanalPedido())\npm.collectionVariables.set('quantidade_item_1', pm.variables.replaceIn('{{$randomInt}}'));\npm.collectionVariables.set('obs_item_1', pm.variables.replaceIn('{{$randomProductName}}'));\n\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"canalPedido\": \"{{canal_pedido}}\",\n    \"idCliente\": \"{{id_usuario}}\",\n    \"itens\": [\n        {\n            \"idProduto\": \"{{id_produto_aleatorio_1}}\",\n            \"quantidade\": {{quantidade_item_1}},\n            \"observacao\": \"{{obs_item_1}}\"\n        }\n    ]\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_PEDIDO}}",
+              "host": [
+                "{{URL_PEDIDO}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create_order - Produto inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.test(\"Status code para credenciais inválidas\", function () {\n    pm.response.to.have.status(404);\n});\n\npm.test(\"Dados obrigatórios da mensagem de erro existem\", function () {\n    pm.expect(response.status).to.exist;\n    pm.expect(response.mensagem).to.exist;\n    pm.expect(response.erros).to.exist;\n});\n\npm.test(\"Mensagem de erro contém os valores esperados\", function () {\n    pm.expect(response.status).to.be.eql(404);\n    pm.expect(response.mensagem).to.be.eql(\"Produto com id 'abc71a8d-ccae-446d-8cad-abcee6e033dd' não encontrado.\");\n    pm.expect(response.erros).to.be.eql([]);\n});\n"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "function sortearCanalPedido() {\n  const canalPedido = [\n    \"APP\",\n    \"TOTEM\",\n    \"BALCAO\",\n    \"PICKUP\",\n    \"WEB\"\n  ];\n\n  return canalPedido[Math.floor(Math.random() * canalPedido.length)];\n}\n\npm.collectionVariables.set('canal_pedido', sortearCanalPedido())\npm.collectionVariables.set('quantidade_item_1', pm.variables.replaceIn('{{$randomInt}}'));\npm.collectionVariables.set('obs_item_1', pm.variables.replaceIn('{{$randomProductName}}'));\n\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"canalPedido\": \"{{canal_pedido}}\",\n    \"idCliente\": \"{{id_usuario}}\",\n    \"itens\": [\n        {\n            \"idProduto\": \"abc71a8d-ccae-446d-8cad-abcee6e033dd\",\n            \"quantidade\": {{quantidade_item_1}},\n            \"observacao\": \"{{obs_item_1}}\"\n        }\n    ]\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_PEDIDO}}",
+              "host": [
+                "{{URL_PEDIDO}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create_order - Produto com estoque insuficiente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.test(\"Status code para credenciais inválidas\", function () {\n    pm.response.to.have.status(400);\n});\n\npm.test(\"Dados obrigatórios da mensagem de erro existem\", function () {\n    pm.expect(response.status).to.exist;\n    pm.expect(response.mensagem).to.exist;\n    pm.expect(response.erros).to.exist;\n});\n\npm.test(\"Mensagem de erro contém os valores esperados\", function () {\n    pm.expect(response.status).to.be.eql(400);\n    pm.expect(response.mensagem).to.be.eql(\n        `Estoque indisponível para o produto: ${pm.collectionVariables.get(\"nome_produto_aleatorio_1\")}`\n    );\n    pm.expect(response.erros).to.be.eql([]);\n});\n"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "function sortearCanalPedido() {\n  const canalPedido = [\n    \"APP\",\n    \"TOTEM\",\n    \"BALCAO\",\n    \"PICKUP\",\n    \"WEB\"\n  ];\n\n  return canalPedido[Math.floor(Math.random() * canalPedido.length)];\n}\n\npm.collectionVariables.set('canal_pedido', sortearCanalPedido())\npm.collectionVariables.set('quantidade_item_1', pm.variables.replaceIn('{{$randomInt}}'));\npm.collectionVariables.set('obs_item_1', pm.variables.replaceIn('{{$randomProductName}}'));\n\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"canalPedido\": \"{{canal_pedido}}\",\n    \"idCliente\": \"{{id_usuario}}\",\n    \"itens\": [\n        {\n            \"idProduto\": \"{{id_produto_aleatorio_1}}\",\n            \"quantidade\": 100000,\n            \"observacao\": \"{{obs_item_1}}\"\n        }\n    ]\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_PEDIDO}}",
+              "host": [
+                "{{URL_PEDIDO}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get_all_order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.test(\"Status code da buscar do pedido\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Deve retornar pelo menos um pedido\", function () {\n    pm.expect(response.content.length).to.be.above(0);\n});"
+                ]
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_PEDIDO}}",
+              "host": [
+                "{{URL_PEDIDO}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get_order_by_id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.collectionVariables.set(\"status_pedido\", response.statusPedido);\n\npm.test(\"Status code da busca do pedido\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Dados obrigatórios do pedido existem\", function () {\n    pm.expect(response.idPedido).to.exist;\n    pm.expect(response.canalPedido).to.exist;\n    pm.expect(response.statusPedido).to.exist;\n    pm.expect(response.valorTotal).to.exist;\n    pm.expect(response.nomeCliente).to.exist;\n    pm.expect(response.emailCliente).to.exist;\n    pm.expect(response.itens).to.exist;\n\n    response.itens.forEach((itens) => {\n        pm.expect(itens.idItemPedido).to.exist;\n        pm.expect(itens.nomeProduto).to.exist;\n        pm.expect(itens.observacao).to.exist;\n        pm.expect(itens.quantidade).to.exist;\n        pm.expect(itens.precoUnitario).to.exist;\n    })\n});\n\npm.test(\"Dados retornados do pedido são os mesmos enviados\", function () {\n    pm.expect(response.idPedido).to.eql(pm.collectionVariables.get(\"id_pedido\"));\n\n});"
+                ]
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_PEDIDO}}/{{id_pedido}}",
+              "host": [
+                "{{URL_PEDIDO}}"
+              ],
+              "path": [
+                "{{id_pedido}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get_order_by_channel_request",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "function sortearCanalPagamento() {\n  const canalPagamento = [\n    \"APP\",\n    \"TOTEM\",\n    \"BALCAO\",\n    \"PICKUP\",\n    \"WEB\"\n  ];\n\n  return canalPagamento[Math.floor(Math.random() * canalPagamento.length)];\n}\n\npm.collectionVariables.set('canal_pedido', sortearCanalPagamento())\n"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code da busca pelo canal-pedido', () => {\n    pm.response.to.have.status(200);\n})\n\npm.test('Dados retornados do canal-pedido são os mesmos enviados', () => {\n    pm.response.json().forEach((pedido) => {\n        pm.expect(pedido.canalPedido).to.eql(pm.collectionVariables.get('canal_pedido'));\n    })\n})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL_PEDIDO}}/pesquisa?canal-pedido={{canal_pedido}}",
+              "host": [
+                "{{URL_PEDIDO}}"
+              ],
+              "path": [
+                "pesquisa"
+              ],
+              "query": [
+                {
+                  "key": "canal-pedido",
+                  "value": "{{canal_pedido}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update_order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.test(\"Status code da alteração do pedido\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Dados obrigatórios do pedido existem\", function () {\n    pm.expect(response.idPedido).to.exist;\n    pm.expect(response.canalPedido).to.exist;\n    pm.expect(response.statusPedido).to.exist;\n    pm.expect(response.valorTotal).to.exist;\n    pm.expect(response.nomeCliente).to.exist;\n    pm.expect(response.itens).to.exist;\n\n    response.itens.forEach((itens) => {\n        pm.expect(itens.idItemPedido).to.exist;\n        pm.expect(itens.nomeProduto).to.exist;\n        pm.expect(itens.observacao).to.exist;\n        pm.expect(itens.quantidade).to.exist;\n        pm.expect(itens.precoUnitario).to.exist;\n    })\n});\n\npm.test(\"Dados retornados do pedido são os mesmos enviados\", function () {\n    pm.expect(response.statusPedido).to.eql(pm.collectionVariables.get('status_pedido'));\n\n});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "function sortearStatus() {\n  const status = [\n    \"COZINHA\",\n    \"PRONTO\",\n    \"ENTREGUE\",\n    \"CANCELADO\"\n  ];\n\n  return status[Math.floor(Math.random() * status.length)];\n}\n\npm.collectionVariables.set('status_pedido', sortearStatus())\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"statusPedido\": \"{{status_pedido}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_PEDIDO}}/{{id_pedido}}/status",
+              "host": [
+                "{{URL_PEDIDO}}"
+              ],
+              "path": [
+                "{{id_pedido}}",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Pagamento",
+      "item": [
+        {
+          "name": "create_payment - Pagamento aprovado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.collectionVariables.set('id_pagamento', response.idPagamento);\n\npm.test(\"Status code da criação do pagamento\", () => {\n    pm.response.to.have.status(201);\n});     \n\npm.test(\"Dados obrigatórios do pagamento existem\", () => {\n    pm.expect(response.idPagamento).to.exist;\n    pm.expect(response.formaPagamento).to.exist;\n    pm.expect(response.valorPagamento).to.exist;\n    pm.expect(response.statusPagamento).to.exist;\n    pm.expect(response.dataPagamento).to.exist;\n    pm.expect(response.idPedido).to.exist;\n});\n\npm.test(\"Dados retornados do pagamento são os mesmos enviados\", () => {\n    pm.expect(response.formaPagamento).to.be.eql(pm.collectionVariables.get('forma_pagamento'));\n    pm.expect(response.valorPagamento).to.be.eql(pm.collectionVariables.get('valor_total'));\n    pm.expect(response.idPedido).to.be.eql(pm.collectionVariables.get('id_pedido'));\n})"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "function sortearPagamento() {\n  const pagamento = [\n    \"PIX\",\n    \"CARTAO_CREDITO\",\n    \"CARTAO_DEBITO\",\n    \"DINHEIRO\"\n  ];\n\n  return pagamento[Math.floor(Math.random() * pagamento.length)];\n}\n\npm.collectionVariables.set('forma_pagamento', sortearPagamento())"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"formaPagamento\": \"{{forma_pagamento}}\",\n    \"valorPagamento\": {{valor_total}},\n    \"idPedido\": \"{{id_pedido}}\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_PAGAMENTO}}",
+              "host": [
+                "{{URL_PAGAMENTO}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create_payment - Pagamento Recusado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.test(\"Status code para credenciais inválidas\", function () {\n    pm.response.to.have.status(400);\n});\n\npm.test(\"Dados obrigatórios da mensagem de erro existem\", function () {\n    pm.expect(response.status).to.exist;\n    pm.expect(response.mensagem).to.exist;\n    pm.expect(response.erros).to.exist;\n});\n\npm.test(\"Mensagem de erro contém os valores esperados\", function () {\n    pm.expect(response.status).to.be.eql(400);\n    pm.expect(response.mensagem).to.be.eql(\n        `Pagamento Recusado. Valor do pedido: R$${pm.collectionVariables.get(\"valor_total\")}.00`\n    );\n    pm.expect(response.erros).to.be.eql([]);\n});\n"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "function sortearPagamento() {\n  const pagamento = [\n    \"PIX\",\n    \"CARTAO_CREDITO\",\n    \"CARTAO_DEBITO\",\n    \"DINHEIRO\"\n  ];\n\n  return pagamento[Math.floor(Math.random() * pagamento.length)];\n}\n\npm.collectionVariables.set('forma_pagamento', sortearPagamento());\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"formaPagamento\": \"{{forma_pagamento}}\",\n    \"valorPagamento\": 1,\n    \"idPedido\": \"{{id_pedido}}\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_PAGAMENTO}}",
+              "host": [
+                "{{URL_PAGAMENTO}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get_all_payment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code da buscar de pagamentos\", () => {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Deve retorna pelo menos um pagamento\", () => {\n    pm.expect(pm.response.json().content.length).to.be.above(0);\n});"
+                ]
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_PAGAMENTO}}",
+              "host": [
+                "{{URL_PAGAMENTO}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get_payment_by_id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.test(\"Status code da busca do pagamento pelo id\", () => {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Dados obrigatórios do pagamento existem\", () => {\n    pm.expect(response.idPagamento).to.exist;\n    pm.expect(response.formaPagamento).to.exist;\n    pm.expect(response.valorPagamento).to.exist;\n    pm.expect(response.statusPagamento).to.exist;\n    pm.expect(response.dataPagamento).to.exist;\n    pm.expect(response.idPedido).to.exist;\n});\n\npm.test(\"Dado retornado pelo pagamento são os mesmos enviados\", () => {\n    pm.expect(response.idPagamento).to.be.eql(pm.collectionVariables.get('id_pagamento'))\n});"
+                ]
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_PAGAMENTO}}/{{id_pagamento}}",
+              "host": [
+                "{{URL_PAGAMENTO}}"
+              ],
+              "path": [
+                "{{id_pagamento}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update_payment",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "function sortearStatus() {\n  const status = [\n    \"APROVADO\",\n    \"RECUSADO\",\n    \"CANCELADO\",\n    \"ESTORNADO\",\n    \"AGUARDANDO\"\n  ];\n\n  return status[Math.floor(Math.random() * status.length)];\n}\n\npm.collectionVariables.set('status_pagamento', sortearStatus())\n"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.test(\"Status code da atualização do pagamento\", () => {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Dados obrigatórios do pagamento existem\", () => {\n    pm.expect(response.idPagamento).to.exist;\n    pm.expect(response.formaPagamento).to.exist;\n    pm.expect(response.valorPagamento).to.exist;\n    pm.expect(response.statusPagamento).to.exist;\n    pm.expect(response.dataPagamento).to.exist;\n    pm.expect(response.idPedido).to.exist;\n});\n\npm.test(\"Dados retornados do pedido são os mesmos enviados\", () => {\n    pm.expect(response.idPagamento).to.be.eql(pm.collectionVariables.get('id_pagamento'));\n    pm.expect(response.statusPagamento).to.be.eql(pm.collectionVariables.get('status_pagamento'));\n\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"statusPagamento\": \"{{status_pagamento}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_PAGAMENTO}}/{{id_pagamento}}",
+              "host": [
+                "{{URL_PAGAMENTO}}"
+              ],
+              "path": [
+                "{{id_pagamento}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Fidelidade",
+      "item": [
+        {
+          "name": "get_all_loyalty_program",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.collectionVariables.set('id_fidelidade', response.content[0].idFidelidade);\n\npm.test(\"Status code da busca do programa-fidelidade\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Deve retorna pelo menos um programa-fidelidade\", () => {\n    pm.expect(pm.response.json().content.length).to.be.above(0);\n})\n\npm.test(\"Dados obrigatórios da programa-fidelidade existem\", function () {\n    response.content.forEach((fidelidade) => {\n        pm.expect(fidelidade.idFidelidade).to.exist;\n        pm.expect(fidelidade.saldoPontos).to.exist;\n        pm.expect(fidelidade.nivel).to.exist;\n        pm.expect(fidelidade.cliente).to.exist;\n    })\n});\n"
+                ]
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_PROGRAMA_FIDELIDADE}}?pagina&tamanho-pagina=50",
+              "host": [
+                "{{URL_PROGRAMA_FIDELIDADE}}"
+              ],
+              "query": [
+                {
+                  "key": "pagina",
+                  "value": ""
+                },
+                {
+                  "key": "tamanho-pagina",
+                  "value": "50"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get_loyalty_program_by_id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.test(\"Status da criação do cliente\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Dados obrigatórios da Fidelidade existem\", function () {\n    pm.expect(response.idFidelidade).to.exist;\n    pm.expect(response.cliente).to.exist;\n    pm.expect(response.saldoPontos).to.exist;\n    pm.expect(response.nivel).to.exist;\n});\n\npm.test(\"Dados retornados são os mesmos enviados\", function () {\n    pm.expect(response.idFidelidade).to.eql(pm.collectionVariables.get(\"id_fidelidade\"));\n});\n"
+                ]
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_PROGRAMA_FIDELIDADE}}/{{id_fidelidade}}",
+              "host": [
+                "{{URL_PROGRAMA_FIDELIDADE}}"
+              ],
+              "path": [
+                "{{id_fidelidade}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get_loyalty_program_by_email_user",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\n\npm.test(\"Status da criação do cliente\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Dados obrigatórios da Fidelidade existem\", function () {\n    pm.expect(response.idFidelidade).to.exist;\n    pm.expect(response.cliente).to.exist;\n    pm.expect(response.saldoPontos).to.exist;\n    pm.expect(response.nivel).to.exist;\n});\n\npm.test(\"Dados retornados são os mesmos enviados\", function () {\n    pm.expect(response.cliente).to.eql(pm.collectionVariables.get('nome_usuario'));\n});"
+                ]
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL_PROGRAMA_FIDELIDADE}}/pesquisa?email={{email_usuario}}",
+              "host": [
+                "{{URL_PROGRAMA_FIDELIDADE}}"
+              ],
+              "path": [
+                "pesquisa"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "{{email_usuario}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "nome_cliente",
+      "value": ""
+    },
+    {
+      "key": "cpf_cliente",
+      "value": ""
+    },
+    {
+      "key": "email_cliente",
+      "value": ""
+    },
+    {
+      "key": "senha_cliente",
+      "value": ""
+    },
+    {
+      "key": "telefone_cliente",
+      "value": ""
+    },
+    {
+      "key": "nome_usuario",
+      "value": ""
+    },
+    {
+      "key": "cpf_usuario",
+      "value": ""
+    },
+    {
+      "key": "email_usuario",
+      "value": ""
+    },
+    {
+      "key": "senha_usuario",
+      "value": ""
+    },
+    {
+      "key": "telefone_usuario",
+      "value": ""
+    },
+    {
+      "key": "id_usuario",
+      "value": ""
+    },
+    {
+      "key": "username_login",
+      "value": ""
+    },
+    {
+      "key": "password_login",
+      "value": ""
+    },
+    {
+      "key": "nome_produto",
+      "value": ""
+    },
+    {
+      "key": "descricao_produto",
+      "value": ""
+    },
+    {
+      "key": "preco_produto",
+      "value": ""
+    },
+    {
+      "key": "disponivel_produto",
+      "value": ""
+    },
+    {
+      "key": "URL_PEDIDO",
+      "value": ""
+    },
+    {
+      "key": "id_produto_0",
+      "value": ""
+    },
+    {
+      "key": "id_produto_1",
+      "value": ""
+    },
+    {
+      "key": "id_produto_2",
+      "value": ""
+    },
+    {
+      "key": "id_produto_3",
+      "value": ""
+    },
+    {
+      "key": "quantidade_item_1",
+      "value": ""
+    },
+    {
+      "key": "quantidade_item_2",
+      "value": ""
+    },
+    {
+      "key": "quantidade_item_3",
+      "value": ""
+    },
+    {
+      "key": "obs_item_3",
+      "value": ""
+    },
+    {
+      "key": "obs_item_1",
+      "value": ""
+    },
+    {
+      "key": "obs_item_2",
+      "value": ""
+    },
+    {
+      "key": "id_pedido",
+      "value": ""
+    },
+    {
+      "key": "valorTotal",
+      "value": ""
+    },
+    {
+      "key": "status_pedido",
+      "value": ""
+    },
+    {
+      "key": "valor_total",
+      "value": ""
+    },
+    {
+      "key": "id_pagamento",
+      "value": ""
+    },
+    {
+      "key": "status_pagamento",
+      "value": ""
+    },
+    {
+      "key": "forma_pagamento",
+      "value": ""
+    },
+    {
+      "key": "id_unidade",
+      "value": ""
+    },
+    {
+      "key": "name_unidade",
+      "value": ""
+    },
+    {
+      "key": "nome_unidade",
+      "value": ""
+    },
+    {
+      "key": "endereco_unidade",
+      "value": ""
+    },
+    {
+      "key": "cidade_unidade",
+      "value": ""
+    },
+    {
+      "key": "estado_unidade",
+      "value": ""
+    },
+    {
+      "key": "telefone_unidade",
+      "value": ""
+    },
+    {
+      "key": "nome_unidade_update",
+      "value": ""
+    },
+    {
+      "key": "endereco_unidade_update",
+      "value": ""
+    },
+    {
+      "key": "cidade_unidade_update",
+      "value": ""
+    },
+    {
+      "key": "estado_unidade_update",
+      "value": ""
+    },
+    {
+      "key": "telefone_unidade_update",
+      "value": ""
+    },
+    {
+      "key": "canal_pagamento",
+      "value": ""
+    },
+    {
+      "key": "canal_pedido",
+      "value": ""
+    },
+    {
+      "key": "id_programa_fidelidade",
+      "value": ""
+    },
+    {
+      "key": "saldoPontos",
+      "value": ""
+    },
+    {
+      "key": "nivel",
+      "value": ""
+    },
+    {
+      "key": "id_produtto_estoque_aleatorio",
+      "value": ""
+    },
+    {
+      "key": "id_estoque",
+      "value": ""
+    },
+    {
+      "key": "id_produto",
+      "value": ""
+    },
+    {
+      "key": "id_novo_produto",
+      "value": ""
+    },
+    {
+      "key": "id_estoque_aleatorio",
+      "value": ""
+    },
+    {
+      "key": "id_produto_estoque_aleatorio",
+      "value": ""
+    },
+    {
+      "key": "nome_produto_estoque_aleatorio",
+      "value": ""
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "URL_USUARIO",
+      "value": ""
+    },
+    {
+      "key": "update_nome_usuario",
+      "value": ""
+    },
+    {
+      "key": "update_email_usuario",
+      "value": ""
+    },
+    {
+      "key": "update_senha_usuario",
+      "value": ""
+    },
+    {
+      "key": "update_telefone_usuario",
+      "value": ""
+    },
+    {
+      "key": "update_role",
+      "value": ""
+    },
+    {
+      "key": "URL_UNIDADE",
+      "value": ""
+    },
+    {
+      "key": "update_nome_unidade",
+      "value": ""
+    },
+    {
+      "key": "update_endereco_unidade",
+      "value": ""
+    },
+    {
+      "key": "update_cidade_unidade",
+      "value": ""
+    },
+    {
+      "key": "update_estado_unidade",
+      "value": ""
+    },
+    {
+      "key": "update_telefone_unidade",
+      "value": ""
+    },
+    {
+      "key": "URL_PRODUTO",
+      "value": ""
+    },
+    {
+      "key": "update_nome_produto",
+      "value": ""
+    },
+    {
+      "key": "update_descricao_produto",
+      "value": ""
+    },
+    {
+      "key": "update_preco_produto",
+      "value": ""
+    },
+    {
+      "key": "update_disponivel_produto",
+      "value": ""
+    },
+    {
+      "key": "URL_ESTOQUE",
+      "value": ""
+    },
+    {
+      "key": "id_produto_aleatorio",
+      "value": ""
+    },
+    {
+      "key": "nome_produto_aleatorio",
+      "value": ""
+    },
+    {
+      "key": "quantidade_estoque",
+      "value": ""
+    },
+    {
+      "key": "minimo_estoque",
+      "value": ""
+    },
+    {
+      "key": "id_produto_aleatorio_1",
+      "value": ""
+    },
+    {
+      "key": "nome_produto_aleatorio_1",
+      "value": ""
+    },
+    {
+      "key": "URL_PAGAMENTO",
+      "value": ""
+    },
+    {
+      "key": "URL_PROGRAMA_FIDELIDADE",
+      "value": ""
+    },
+    {
+      "key": "id_fidelidade",
+      "value": ""
+    },
+    {
+      "key": "valor_pagamento_recusado",
+      "value": ""
+    },
+    {
+      "value": ""
+    }
+  ]
+}
